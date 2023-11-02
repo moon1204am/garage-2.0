@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
+using Garage2._0.Models.ViewModels;
 
 namespace Garage2._0.Controllers
 {
@@ -56,15 +57,25 @@ namespace Garage2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FordonsTyp,RegNr,Farg,Marke,Modell,AntalHjul,AnkomstTid")] ParkeratFordon parkeratFordon)
+        public async Task<IActionResult> Create(FordonViewModel fordonViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(parkeratFordon);
+                var fordon = new ParkeratFordon
+                {
+                    FordonsTyp = fordonViewModel.FordonsTyp,
+                    RegNr = fordonViewModel.RegNr,
+                    Farg = fordonViewModel.Farg,
+                    Marke = fordonViewModel.Marke,
+                    Modell = fordonViewModel.Modell,
+                    AntalHjul = fordonViewModel?.AntalHjul,
+                    AnkomstTid = DateTime.Now
+                };
+                _context.Add(fordon);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(parkeratFordon);
+            return View(fordonViewModel);
         }
 
         // GET: ParkeratFordons/Edit/5
