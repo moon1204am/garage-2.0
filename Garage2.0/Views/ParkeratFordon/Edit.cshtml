@@ -1,0 +1,64 @@
+﻿@model Garage2._0.Models.ParkeratFordon
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ParkeratFordon</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="FordonsTyp" class="control-label"></label>
+                <input asp-for="FordonsTyp" class="form-control" />
+                <span asp-validation-for="FordonsTyp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegNr" class="control-label"></label>
+                <input asp-for="RegNr" class="form-control" />
+                <span asp-validation-for="RegNr" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Farg" class="control-label"></label>
+                <input asp-for="Farg" class="form-control" />
+                <span asp-validation-for="Farg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Marke" class="control-label"></label>
+                <input asp-for="Marke" class="form-control" />
+                <span asp-validation-for="Marke" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modell" class="control-label"></label>
+                <input asp-for="Modell" class="form-control" />
+                <span asp-validation-for="Modell" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AntalHjul" class="control-label"></label>
+                <input asp-for="AntalHjul" class="form-control" />
+                <span asp-validation-for="AntalHjul" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnkomstTid" class="control-label"></label>
+                <input asp-for="AnkomstTid" class="form-control" />
+                <span asp-validation-for="AnkomstTid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

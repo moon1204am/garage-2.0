@@ -2,7 +2,7 @@
 {
     public class ParkeratFordon
     {
-
+        public int Id { get; set; }
         public string FordonsTyp { get; set; }
         public string RegNr { get; set; }
         public string Farg {  get; set; }
