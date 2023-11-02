@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Garage2._0.Models;
-using Humanizer.Localisation;
+using Garage2._0.Models.Entities;
 
 namespace Garage2._0.Data
 {
