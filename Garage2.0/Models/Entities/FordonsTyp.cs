@@ -4,7 +4,7 @@
     {
         Flygplan,
         Bil,
-        Båt,
+        Bat,
         Motorcykel,
         Buss
     }
