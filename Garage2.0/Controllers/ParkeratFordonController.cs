@@ -10,11 +10,11 @@ using Garage2._0.Models;
 
 namespace Garage2._0.Controllers
 {
-    public class ParkeratFordonsController : Controller
+    public class ParkeratFordonController : Controller
     {
         private readonly Garage2_0Context _context;
 
-        public ParkeratFordonsController(Garage2_0Context context)
+        public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
         }
