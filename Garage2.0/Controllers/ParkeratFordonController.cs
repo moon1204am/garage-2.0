@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
+using Garage2._0.Models.ViewModels;
 
 namespace Garage2._0.Controllers
 {
@@ -159,5 +160,20 @@ namespace Garage2._0.Controllers
         {
           return (_context.ParkeratFordon?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> Filter(string regnr)
+        {
+            var model = string.IsNullOrWhiteSpace(regnr) ?
+                                                _context.ParkeratFordon :
+                                                _context.ParkeratFordon.Where(m => m.RegNr.StartsWith(regnr));
+
+           
+
+
+            return View(nameof(Index), await model.ToListAsync());
+        }
+
     }
+
+
 }

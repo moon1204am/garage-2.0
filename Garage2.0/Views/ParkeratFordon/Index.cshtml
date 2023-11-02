@@ -4,68 +4,23 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Åhlens Parkering City</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
+
+<p>  
+    <a asp-action="Create">Parkera Fordon</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FordonsTyp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RegNr)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Farg)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Marke)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Modell)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AntalHjul)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnkomstTid)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FordonsTyp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegNr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Farg)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Marke)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Modell)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AntalHjul)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnkomstTid)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="regnr" placeholder="Sök via Regnr" />
+        <div class="input-group-append">
+           
+        </div>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search">&emsp;Search</i></button>
+        </div>
+    </div>
+</form>
+
+<partial name="ParkListaPartial" />
