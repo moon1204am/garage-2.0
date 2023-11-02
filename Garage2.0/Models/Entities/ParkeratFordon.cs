@@ -10,6 +10,9 @@ namespace Garage2._0.Models.Entities
         [Required]
         [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}")]
         [Display(Name = "Registreringsnummer")]
+        [Required]
+        [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}")]
+        [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; }
         [StringLength(20)]
         [Display(Name = "Färg")]
