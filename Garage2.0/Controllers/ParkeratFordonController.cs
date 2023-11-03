@@ -171,11 +171,12 @@ namespace Garage2._0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Kvitto()
+        
+        private void Kvitto(ParkeratFordon fordon)
         {
-            return View();
+            return View(fordon);
         }
-
+        
         private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
             return utckeck.Subtract(ankomst);
