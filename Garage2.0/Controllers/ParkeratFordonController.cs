@@ -184,7 +184,9 @@ namespace Garage2._0.Controllers
 
         private double RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
-            return (parkeringstid.TotalMinutes * Convert.ToDouble(pris))/60;
+            double totalPris = (parkeringstid.TotalMinutes * Convert.ToDouble(pris)) / 60;
+            return Math.Round(totalPris, 2, MidpointRounding.AwayFromZero);
+
         }
 
         private bool ParkeratFordonExists(int id)
