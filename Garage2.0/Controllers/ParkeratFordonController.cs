@@ -172,9 +172,24 @@ namespace Garage2._0.Controllers
         }
 
         
-        private void Kvitto(ParkeratFordon fordon)
+        private async Task<IActionResult> Kvitto(int? id)
         {
-            return View(fordon);
+            if (id == null || _context.ParkeratFordon == null)
+            {
+                 return NotFound();
+            }
+            var kvittoViewModel = await _context.ParkeratFordon
+                .FirstOrDefaultAsync(m => m.Id == id);
+            DateTime utcheckTid = DateTime.Now;
+            if (kvittoViewModel == null)
+            {
+                return NotFound();
+            }
+
+            int parkeringsPris = 90;
+            TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
+            RaknaUtPris(parkeringsPris, tid);
+            return View(kvittoViewModel);
         }
         
         private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
