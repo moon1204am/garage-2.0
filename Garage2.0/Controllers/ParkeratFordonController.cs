@@ -176,10 +176,15 @@ namespace Garage2._0.Controllers
             return View();
         }
 
-        private TimeSpan RaknaUtParkeringstid (DateTime ankomst, DateTime utckeck)
+        private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
-            return utckeck - ankomst;
+            return utckeck.Subtract(ankomst);
             
+        }
+
+        private double RaknaUtPris(int pris, TimeSpan parkeringstid)
+        {
+            return (parkeringstid.TotalMinutes * Convert.ToDouble(pris))/60;
         }
 
         private bool ParkeratFordonExists(int id)
