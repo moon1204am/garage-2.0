@@ -87,12 +87,21 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
-            if (parkeratFordon == null)
+            var fordon = await _context.ParkeratFordon.FindAsync(id);
+           
+            if (fordon == null)
             {
                 return NotFound();
             }
-            return View(parkeratFordon);
+            var editView = new FordonViewModel();
+            editView.RegNr = fordon.RegNr;
+            editView.AntalHjul = fordon.AntalHjul;
+            editView.Modell = fordon.Modell;
+            editView.FordonsTyp = fordon.FordonsTyp;
+            editView.Farg = fordon.Farg;
+            editView.Marke = fordon.Marke;
+
+            return View(editView);
         }
 
         // POST: ParkeratFordons/Edit/5
@@ -107,19 +116,16 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            var fordon = _context.ParkeratFordon.Find(id);
-            fordon.FordonsTyp = parkeratFordon.FordonsTyp;
-            fordon.RegNr = parkeratFordon.RegNr;
-            fordon.Farg = parkeratFordon.Farg;
-            fordon.Marke = parkeratFordon.Marke;
-            fordon.Modell = parkeratFordon.Modell;
-            fordon.AntalHjul = parkeratFordon.AntalHjul;
-            
-
-
-
             if (ModelState.IsValid)
             {
+                var fordon = await _context.ParkeratFordon.FindAsync(id);
+                fordon.FordonsTyp = parkeratFordon.FordonsTyp;
+                fordon.RegNr = parkeratFordon.RegNr;
+                fordon.Farg = parkeratFordon.Farg;
+                fordon.Marke = parkeratFordon.Marke;
+                fordon.Modell = parkeratFordon.Modell;
+                fordon.AntalHjul = parkeratFordon.AntalHjul;
+
                 try
                 {
                     _context.Update(fordon);
@@ -139,9 +145,11 @@ namespace Garage2._0.Controllers
                     }
                 }
                 return RedirectToAction("EditMessage");
-               // return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
+                
             }
-            return View(fordon);
+            return View(parkeratFordon);
+
         }
 
         // GET: ParkeratFordons/Delete/5
