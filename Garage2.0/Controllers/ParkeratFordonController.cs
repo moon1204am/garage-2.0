@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace Garage2._0.Controllers
 {
@@ -99,20 +100,31 @@ namespace Garage2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ParkeratFordon parkeratFordon)
+        public async Task<IActionResult> Edit(int id, FordonViewModel parkeratFordon)
         {
             if (id != parkeratFordon.Id)
             {
                 return NotFound();
             }
 
+            var fordon = _context.ParkeratFordon.Find(id);
+            fordon.FordonsTyp = parkeratFordon.FordonsTyp;
+            fordon.RegNr = parkeratFordon.RegNr;
+            fordon.Farg = parkeratFordon.Farg;
+            fordon.Marke = parkeratFordon.Marke;
+            fordon.Modell = parkeratFordon.Modell;
+            fordon.AntalHjul = parkeratFordon.AntalHjul;
+            
+
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(parkeratFordon);
+                    _context.Update(fordon);
 
-                    _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
+                  //  _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -129,7 +141,7 @@ namespace Garage2._0.Controllers
                 return RedirectToAction("EditMessage");
                // return RedirectToAction(nameof(Index));
             }
-            return View(parkeratFordon);
+            return View(fordon);
         }
 
         // GET: ParkeratFordons/Delete/5
