@@ -120,16 +120,17 @@ namespace Garage2._0.Controllers
 
             if (ModelState.IsValid)
             {
-                var fordon = await _context.ParkeratFordon.FindAsync(id);
-                fordon.FordonsTyp = parkeratFordon.FordonsTyp;
-                fordon.RegNr = parkeratFordon.RegNr;
-                fordon.Farg = parkeratFordon.Farg;
-                fordon.Marke = parkeratFordon.Marke;
-                fordon.Modell = parkeratFordon.Modell;
-                fordon.AntalHjul = parkeratFordon.AntalHjul;
+               
 
                 try
                 {
+                    var fordon = await _context.ParkeratFordon.FindAsync(id);
+                    fordon.FordonsTyp = parkeratFordon.FordonsTyp;
+                    fordon.RegNr = parkeratFordon.RegNr;
+                    fordon.Farg = parkeratFordon.Farg;
+                    fordon.Marke = parkeratFordon.Marke;
+                    fordon.Modell = parkeratFordon.Modell;
+                    fordon.AntalHjul = parkeratFordon.AntalHjul;
                     _context.Update(fordon);
 
                   //  _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
@@ -146,8 +147,8 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("EditMessage");
-                // return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(EditMessage));
+          
                 
             }
             return View(parkeratFordon);
