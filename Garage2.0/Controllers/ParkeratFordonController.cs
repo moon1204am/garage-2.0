@@ -26,8 +26,12 @@ namespace Garage2._0.Controllers
               return _context.ParkeratFordon != null ? 
                           View(await _context.ParkeratFordon.ToListAsync()) :
                           Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
+
+
         }
 
+
+        
         // GET: ParkeratFordons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -147,6 +151,7 @@ namespace Garage2._0.Controllers
             return View(parkeratFordon);
         }
 
+        
         // POST: ParkeratFordons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -164,6 +169,11 @@ namespace Garage2._0.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private IActionResult Kvitto()
+        {
+            return View();
         }
 
         private bool ParkeratFordonExists(int id)
