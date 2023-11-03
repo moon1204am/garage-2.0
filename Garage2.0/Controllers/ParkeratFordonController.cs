@@ -93,13 +93,15 @@ namespace Garage2._0.Controllers
             {
                 return NotFound();
             }
-            var editView = new FordonViewModel();
-            editView.RegNr = fordon.RegNr;
-            editView.AntalHjul = fordon.AntalHjul;
-            editView.Modell = fordon.Modell;
-            editView.FordonsTyp = fordon.FordonsTyp;
-            editView.Farg = fordon.Farg;
-            editView.Marke = fordon.Marke;
+            var editView = new FordonViewModel
+            {
+                RegNr = fordon.RegNr,
+                AntalHjul = fordon.AntalHjul,
+                Modell = fordon.Modell,
+                FordonsTyp = fordon.FordonsTyp,
+                Farg = fordon.Farg,
+                Marke = fordon.Marke
+            };
 
             return View(editView);
         }
