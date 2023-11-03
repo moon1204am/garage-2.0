@@ -23,7 +23,7 @@ namespace Garage2._0.Controllers
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-              return _context.ParkeratFordon != null ? 
+            return _context.ParkeratFordon != null ? 
                           View(await _context.ParkeratFordon.ToListAsync()) :
                           Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
         }
@@ -72,9 +72,11 @@ namespace Garage2._0.Controllers
                     AnkomstTid = DateTime.Now
                 };
                 _context.Add(fordon);
+                TempData["OkParkeraMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            TempData["ErrorParkeraMsg"] = $"Kunde inte parkera fordon med reg nr {fordonViewModel.RegNr}";
             return View(fordonViewModel);
         }
 
