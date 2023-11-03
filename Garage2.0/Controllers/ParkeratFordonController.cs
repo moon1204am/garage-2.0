@@ -171,9 +171,15 @@ namespace Garage2._0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private IActionResult Kvitto()
+        public IActionResult Kvitto()
         {
             return View();
+        }
+
+        private TimeSpan RaknaUtParkeringstid (DateTime ankomst, DateTime utckeck)
+        {
+            return utckeck - ankomst;
+            
         }
 
         private bool ParkeratFordonExists(int id)
