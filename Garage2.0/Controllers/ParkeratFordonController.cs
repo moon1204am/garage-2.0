@@ -15,6 +15,8 @@ namespace Garage2._0.Controllers
     {
         private readonly Garage2_0Context _context;
 
+        private const int pris = 60;
+
         public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
@@ -189,7 +191,7 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            int pris = 50;
+            
             TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
             double totalPris = RaknaUtPris(pris, tid);
             return View(kvittoViewModel);
@@ -201,10 +203,10 @@ namespace Garage2._0.Controllers
             
         }
 
-        private double RaknaUtPris(int pris, TimeSpan parkeringstid)
+        private int RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
-            double totalPris = (parkeringstid.TotalMinutes * Convert.ToDouble(pris)) / 60;
-            return Math.Round(totalPris, 2, MidpointRounding.AwayFromZero);
+            int totalPris = parkeringstid.TotalMinutes * pris / 60;
+            return totalPris;
 
         }
 
