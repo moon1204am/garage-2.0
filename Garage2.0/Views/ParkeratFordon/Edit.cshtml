@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Ändra i fordon</h1>
 
 <h4>ParkeratFordon</h4>
 <hr />
@@ -14,9 +14,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="FordonsTyp" class="control-label"></label>
-                <input asp-for="FordonsTyp" class="form-control" />
-                <span asp-validation-for="FordonsTyp" class="text-danger"></span>
+                <select class="form-control" asp-for="FordonsTyp" asp-items="@Html.GetEnumSelectList<FordonsTyp>()">
+                    <option selected="selected" value="">Ändra Fordonstyp</option>
+                </select>
+                
+                
             </div>
             <div class="form-group">
                 <label asp-for="RegNr" class="control-label"></label>
@@ -43,13 +45,9 @@
                 <input asp-for="AntalHjul" class="form-control" />
                 <span asp-validation-for="AntalHjul" class="text-danger"></span>
             </div>
+    
             <div class="form-group">
-                <label asp-for="AnkomstTid" class="control-label"></label>
-                <input asp-for="AnkomstTid" class="form-control" />
-                <span asp-validation-for="AnkomstTid" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Spara" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -62,3 +60,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
