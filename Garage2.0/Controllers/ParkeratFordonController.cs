@@ -213,6 +213,7 @@ namespace Garage2._0.Controllers
             {
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
+                 TempData["OkParkeraMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
 
                 ////Kvitto?
 
@@ -235,6 +236,7 @@ namespace Garage2._0.Controllers
                .FirstOrDefaultAsync(m => m.Id == id);
             _context.ParkeratFordon.Remove(parkeratFordon);
             await _context.SaveChangesAsync();
+            TempData["OkParkeraMsg"] = $"Hämtat fordon med reg nr {parkeratFordon.RegNr} samt kvitto.";
 
             DateTime utcheckTid = DateTime.Now;
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
