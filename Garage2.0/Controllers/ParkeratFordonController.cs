@@ -1,32 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
-using System.Text.RegularExpressions;
+using Garage2._0.Services;
 
 namespace Garage2._0.Controllers
 {
     public class ParkeratFordonController : Controller
     {
         private readonly Garage2_0Context _context;
+        private IValidering _validering;
 
-        public ParkeratFordonController(Garage2_0Context context)
+        public ParkeratFordonController(Garage2_0Context context, IValidering validering)
         {
             _context = context;
+            _validering = validering;
         }
 
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-            return _context.ParkeratFordon != null ? 
-                          View(await _context.ParkeratFordon.ToListAsync()) :
-                          Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
+            var fordon = _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
+            {
+                Id = f.Id,
+                FordonsTyp = f.FordonsTyp,
+                RegNr = f.RegNr,
+                AnkomstTid = f.AnkomstTid
+
+            });
+            return View(await fordon.ToListAsync());
         }
 
         // GET: ParkeratFordons/Details/5
@@ -62,12 +65,12 @@ namespace Garage2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-                var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == fordonViewModel.RegNr);
-                if (fordonReg != null)
+                if (_validering.RegNrExisterar(_context, fordonViewModel.RegNr))
                 {
                     ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                     return View(fordonViewModel);
                 }
+
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -111,6 +114,7 @@ namespace Garage2._0.Controllers
             {
                 return NotFound();
             }
+
             var fordonViewModel = new FordonViewModel
             {
                 RegNr = parkeratFordon.RegNr,
@@ -136,10 +140,14 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
+            if (_validering.RegNrExisterar(_context, parkeratFordonViewModel.RegNr))
+            {
+                ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
+                return View(parkeratFordonViewModel);
+            }
+
             if (ModelState.IsValid)
             {
-               
-
                 try
                 {
                     var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
@@ -151,9 +159,8 @@ namespace Garage2._0.Controllers
                     parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
                     _context.Update(parkeratFordon);
 
-                  //  _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
                     await _context.SaveChangesAsync();
-                    TempData["OkParkeraMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
+                    TempData["OkEditeraMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -167,11 +174,8 @@ namespace Garage2._0.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-          
-                
             }
             return View(parkeratFordonViewModel);
-
         }
 
         // GET: ParkeratFordons/Delete/5
@@ -222,15 +226,16 @@ namespace Garage2._0.Controllers
                                                 _context.ParkeratFordon :
                                                 _context.ParkeratFordon.Where(m => m.RegNr.StartsWith(regnr));
 
-           
+            var result = await model.Select(f => new FordonOversiktViewModel
+            {
+                Id = f.Id,
+                FordonsTyp = f.FordonsTyp,
+                RegNr = f.RegNr,
+                AnkomstTid = f.AnkomstTid
 
+            }).ToListAsync();
 
-            return View(nameof(Index), await model.ToListAsync());
+            return View(nameof(Index), result);
         }
-
-      
-
     }
-
-
 }

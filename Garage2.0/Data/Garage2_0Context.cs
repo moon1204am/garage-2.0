@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Garage2._0.Models.Entities;
 
 namespace Garage2._0.Data
@@ -15,7 +11,6 @@ namespace Garage2._0.Data
         }
 
         public DbSet<ParkeratFordon> ParkeratFordon => Set<ParkeratFordon>();
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

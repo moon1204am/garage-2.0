@@ -1,16 +1,14 @@
-﻿@model IEnumerable<ParkeratFordon>
+﻿@model IEnumerable<FordonOversiktViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Välkommen";
 }
 
 <h1>Åhlens Parkering City</h1>
 
-
 <p>  
     <a asp-action="Create">Parkera Fordon</a>
 </p>
-
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="regnr" placeholder="Sök via Regnr" />
@@ -25,4 +23,3 @@
 <p class="alert-info"><strong>@TempData["OkParkeraMsg"]</strong></p>
 
 <partial name="ParkListaPartial" />
-

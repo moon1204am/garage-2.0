@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Garage2._0.Models.Entities
 {
@@ -9,8 +8,6 @@ namespace Garage2._0.Models.Entities
         [Display(Name = "Fordons typ")]
         public FordonsTyp FordonsTyp { get; set; }
         [Required]
-        [Remote(action: "RegNrExisterar", controller: "ParkeratFordon")]
-        [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}")]
         [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; }
         [StringLength(20)]
