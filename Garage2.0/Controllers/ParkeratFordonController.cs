@@ -63,14 +63,14 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FordonViewModel fordonViewModel)
         {
+            if (_validering.RegNrExisterar(_context, fordonViewModel.RegNr))
+            {
+                ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
+                return View(fordonViewModel);
+            }
+
             if (ModelState.IsValid)
             {
-                if (_validering.RegNrExisterar(_context, fordonViewModel.RegNr))
-                {
-                    ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
-                    return View(fordonViewModel);
-                }
-
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,

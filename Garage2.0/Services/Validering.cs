@@ -7,7 +7,7 @@ namespace Garage2._0.Services
         public bool RegNrExisterar(Garage2_0Context context, string regNr)
         {
             var fordonReg = context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
-            if (fordonReg == null)
+            if (fordonReg == null || fordonReg.RegNr == regNr)
             {
                 return false;
             }
