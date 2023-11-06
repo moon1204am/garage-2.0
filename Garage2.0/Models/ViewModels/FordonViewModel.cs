@@ -1,4 +1,5 @@
 ﻿using Garage2._0.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Garage2._0.Models.ViewModels
@@ -9,7 +10,8 @@ namespace Garage2._0.Models.ViewModels
         [Display(Name = "Fordons typ")]
         public FordonsTyp FordonsTyp { get; set; }
         [Required]
-        [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}")]
+        [Remote(action: "RegNrExisterar", controller: "ParkeratFordon", ErrorMessage = "Reg numret existerar redan, försök igen.")]
+        [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}", ErrorMessage = "Ange ett giltigt reg nummer.")]
         [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; }
         [StringLength(20)]

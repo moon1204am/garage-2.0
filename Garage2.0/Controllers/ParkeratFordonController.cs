@@ -61,6 +61,12 @@ namespace Garage2._0.Controllers
         {
             if (ModelState.IsValid)
             {
+                var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == fordonViewModel.RegNr);
+                if (fordonReg != null)
+                {
+                    ModelState.AddModelError("RegNr", "Reg numret existerar redan.");
+                    return View(fordonViewModel);
+                }
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -72,12 +78,22 @@ namespace Garage2._0.Controllers
                     AnkomstTid = DateTime.Now
                 };
                 _context.Add(fordon);
-                TempData["OkParkeraMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
                 await _context.SaveChangesAsync();
+                TempData["OkParkeraMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorParkeraMsg"] = $"Kunde inte parkera fordon med reg nr {fordonViewModel.RegNr}";
             return View(fordonViewModel);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult RegNrExisterar(string regNr)
+        {
+            var fordon = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
+            if (fordon == null)
+            {
+                return Json(true);
+            }
+            return Json($"Reg nummer {fordon.RegNr} existerar redan.");
         }
 
         // GET: ParkeratFordons/Edit/5
