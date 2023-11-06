@@ -300,15 +300,12 @@ namespace Garage2._0.Controllers
             }
             result.Intäkter = timeCalculator * 2;
             result.GenomsnittligParkeradTid = timeCalculator / divider;
-
-
-
+            result.AntalBatar = parkeradeFordon.Where(p=>p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
+            result.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
+            result.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
+            result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
+            result.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             return View(result);
         }
-
-
-
     }
-
-
 }
