@@ -90,7 +90,7 @@ namespace Garage2._0.Controllers
         public IActionResult RegNrExisterar(string regNr)
         {
             var fordon = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
-            if (fordon == null)
+            if (fordon == null || fordon.RegNr == regNr)
             {
                 return Json(true);
             }
@@ -153,6 +153,7 @@ namespace Garage2._0.Controllers
 
                   //  _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
                     await _context.SaveChangesAsync();
+                    TempData["OkParkeraMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
