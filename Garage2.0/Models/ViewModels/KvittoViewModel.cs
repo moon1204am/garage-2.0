@@ -5,10 +5,8 @@ namespace Garage2._0.Models.ViewModels
 {
     public class KvittoViewModel
     {
-        public int Id { get; set; }
+        public  int Id  { get; set; }
 
-        [Required]
-        [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}")]
         [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; }
 
@@ -25,7 +23,7 @@ namespace Garage2._0.Models.ViewModels
         public int Pris { get; set; }
 
         [Display(Name = "Total pris")]
-        public  double TotalPris { get; set; }
+        public  int TotalPris { get; set; }
 
 
     }

@@ -15,7 +15,7 @@ namespace Garage2._0.Controllers
     {
         private readonly Garage2_0Context _context;
 
-        private const int pris = 60;
+        private const int timPris = 60;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
@@ -169,32 +169,41 @@ namespace Garage2._0.Controllers
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
             if (parkeratFordon != null)
             {
-                _context.ParkeratFordon.Remove(parkeratFordon);
+                 _context.ParkeratFordon.Remove(parkeratFordon);
+                 await _context.SaveChangesAsync();
+
+                //Kvitto?
+
+
+                //Ja 
+                var model = Kvitto(parkeratFordon);
+                //skicka till kvitoovy
+                return View("Kvitto", model);
             }
             
-            await _context.SaveChangesAsync();
+
+
             return RedirectToAction(nameof(Index));
         }
 
         
-        private async Task<IActionResult> Kvitto(int? id)
+        private KvittoViewModel Kvitto(ParkeratFordon parkeratFordon)
         {
-            if (id == null || _context.ParkeratFordon == null)
-            {
-                 return NotFound();
-            }
-            var kvittoViewModel = await _context.ParkeratFordon
-                .FirstOrDefaultAsync(m => m.Id == id);
             DateTime utcheckTid = DateTime.Now;
-            if (kvittoViewModel == null)
-            {
-                return NotFound();
-            }
+            TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
+            int totalPris = RaknaUtPris(timPris, tid);
 
-            
-            TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
-            double totalPris = RaknaUtPris(pris, tid);
-            return View(kvittoViewModel);
+            var model = new KvittoViewModel
+            {
+                RegNr = parkeratFordon.RegNr,
+                AnkomstTid = parkeratFordon.AnkomstTid,
+                UtchecksTid = utcheckTid,
+                Pris = timPris,
+                TotalPris = totalPris
+
+            };
+
+            return model;
         }
         
         private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
@@ -205,8 +214,8 @@ namespace Garage2._0.Controllers
 
         private int RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
-            int totalPris = parkeringstid.TotalMinutes * pris / 60;
-            return totalPris;
+            return parkeringstid.Minutes * pris /60;
+            
 
         }
 
