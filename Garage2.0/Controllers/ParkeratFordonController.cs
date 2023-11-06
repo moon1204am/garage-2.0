@@ -23,7 +23,7 @@ namespace Garage2._0.Controllers
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-              return _context.ParkeratFordon != null ? 
+            return _context.ParkeratFordon != null ? 
                           View(await _context.ParkeratFordon.ToListAsync()) :
                           Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
         }
@@ -61,6 +61,12 @@ namespace Garage2._0.Controllers
         {
             if (ModelState.IsValid)
             {
+                var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == fordonViewModel.RegNr);
+                if (fordonReg != null)
+                {
+                    ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
+                    return View(fordonViewModel);
+                }
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -73,9 +79,21 @@ namespace Garage2._0.Controllers
                 };
                 _context.Add(fordon);
                 await _context.SaveChangesAsync();
+                TempData["OkParkeraMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
                 return RedirectToAction(nameof(Index));
             }
             return View(fordonViewModel);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult RegNrExisterar(string regNr)
+        {
+            var fordon = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
+            if (fordon == null)
+            {
+                return Json(true);
+            }
+            return Json($"Registreringsnumret existerar redan.");
         }
 
         // GET: ParkeratFordons/Edit/5
