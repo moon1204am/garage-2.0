@@ -172,13 +172,13 @@ namespace Garage2._0.Controllers
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
 
-                ////Kvitto?
+                //Kvitto?
 
-                
-                ////Ja 
-                //var model = Kvitto(parkeratFordon);
-                ////skicka till kvittovy
-                //return View("Kvitto", model);
+
+                //Ja 
+                var model = Kvitto(parkeratFordon);
+                //skicka till kvittovy
+                return View("Kvitto", model);
             }
             
 
