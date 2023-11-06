@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace Garage2._0.Controllers
 {
@@ -105,11 +106,22 @@ namespace Garage2._0.Controllers
             }
 
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
+           
             if (parkeratFordon == null)
             {
                 return NotFound();
             }
-            return View(parkeratFordon);
+            var fordonViewModel = new FordonViewModel
+            {
+                RegNr = parkeratFordon.RegNr,
+                AntalHjul = parkeratFordon.AntalHjul,
+                Modell = parkeratFordon.Modell,
+                FordonsTyp = parkeratFordon.FordonsTyp,
+                Farg = parkeratFordon.Farg,
+                Marke = parkeratFordon.Marke
+            };
+
+            return View(fordonViewModel);
         }
 
         // POST: ParkeratFordons/Edit/5
@@ -117,25 +129,34 @@ namespace Garage2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ParkeratFordon parkeratFordon)
+        public async Task<IActionResult> Edit(int id, FordonViewModel parkeratFordonViewModel)
         {
-            if (id != parkeratFordon.Id)
+            if (id != parkeratFordonViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+               
+
                 try
                 {
+                    var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
+                    parkeratFordon.FordonsTyp = parkeratFordonViewModel.FordonsTyp;
+                    parkeratFordon.RegNr = parkeratFordonViewModel.RegNr;
+                    parkeratFordon.Farg = parkeratFordonViewModel.Farg;
+                    parkeratFordon.Marke = parkeratFordonViewModel.Marke;
+                    parkeratFordon.Modell = parkeratFordonViewModel.Modell;
+                    parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
                     _context.Update(parkeratFordon);
 
-                    _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
+                  //  _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ParkeratFordonExists(parkeratFordon.Id))
+                    if (!ParkeratFordonExists(parkeratFordonViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -144,10 +165,12 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("EditMessage");
-               // return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+          
+                
             }
-            return View(parkeratFordon);
+            return View(parkeratFordonViewModel);
+
         }
 
         // GET: ParkeratFordons/Delete/5
@@ -204,11 +227,7 @@ namespace Garage2._0.Controllers
             return View(nameof(Index), await model.ToListAsync());
         }
 
-        public IActionResult EditMessage()
-        {
-            ViewBag.EditCompleteMessage = "Uppdateringen är slutförd";
-            return View();
-        }
+      
 
     }
 
