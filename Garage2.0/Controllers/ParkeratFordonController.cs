@@ -186,9 +186,9 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            int parkeringsPris = 90;
+            int pris = 50;
             TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
-            RaknaUtPris(parkeringsPris, tid);
+            double totalPris = RaknaUtPris(pris, tid);
             return View(kvittoViewModel);
         }
         
