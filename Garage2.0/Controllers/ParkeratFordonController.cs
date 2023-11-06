@@ -16,6 +16,8 @@ namespace Garage2._0.Controllers
     {
         private readonly Garage2_0Context _context;
 
+        private const int timPris = 60;
+
         public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
@@ -27,8 +29,12 @@ namespace Garage2._0.Controllers
             return _context.ParkeratFordon != null ? 
                           View(await _context.ParkeratFordon.ToListAsync()) :
                           Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
+
+
         }
 
+
+        
         // GET: ParkeratFordons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -192,6 +198,7 @@ namespace Garage2._0.Controllers
             return View(parkeratFordon);
         }
 
+        
         // POST: ParkeratFordons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -204,11 +211,54 @@ namespace Garage2._0.Controllers
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
             if (parkeratFordon != null)
             {
-                _context.ParkeratFordon.Remove(parkeratFordon);
+                 _context.ParkeratFordon.Remove(parkeratFordon);
+                 await _context.SaveChangesAsync();
+
+                //Kvitto?
+
+
+                //Ja 
+                var model = Kvitto(parkeratFordon);
+                //skicka till kvittovy
+                return View("Kvitto", model);
             }
             
-            await _context.SaveChangesAsync();
+
+
             return RedirectToAction(nameof(Index));
+        }
+
+        
+        private KvittoViewModel Kvitto(ParkeratFordon parkeratFordon)
+        {
+            DateTime utcheckTid = DateTime.Now;
+            TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
+            int totalPris = RaknaUtPris(timPris, tid);
+
+            var model = new KvittoViewModel
+            {
+                RegNr = parkeratFordon.RegNr,
+                AnkomstTid = parkeratFordon.AnkomstTid,
+                UtchecksTid = utcheckTid,
+                Pris = timPris,
+                TotalPris = totalPris
+
+            };
+
+            return model;
+        }
+        
+        private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
+        {
+            return utckeck.Subtract(ankomst);
+            
+        }
+
+        private int RaknaUtPris(int pris, TimeSpan parkeringstid)
+        {
+            return parkeringstid.Minutes * pris /60;
+            
+
         }
 
         private bool ParkeratFordonExists(int id)
