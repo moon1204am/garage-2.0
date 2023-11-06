@@ -2,8 +2,8 @@
 {
     public class StatistikViewModel
     {
-        public int Intäkter {  get; set; }
-        public TimeSpan GenomsnittligParkeradTid { get; set; }
+        public double Intäkter {  get; set; }
+        public double GenomsnittligParkeradTid { get; set; }
         public int? AntalHjulIGaraget { get; set; }
         
     }

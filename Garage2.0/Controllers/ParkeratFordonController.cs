@@ -281,9 +281,11 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Statistik()
         {
-            var parkeradeFordon = _context.ParkeratFordon;
+            var parkeradeFordon = _context.ParkeratFordon;          
             var result = new StatistikViewModel();
             int? count = 0;
+            double timeCalculator = 0;
+            double divider = parkeradeFordon.Count();
             
             foreach (var item in parkeradeFordon)
             {
@@ -291,10 +293,13 @@ namespace Garage2._0.Controllers
             }           
             result.AntalHjulIGaraget = count;
 
-            //foreach (var item in parkeradeFordon)
-            //{
-            //    TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
-            //}
+            foreach (var item in parkeradeFordon)
+            {
+                timeCalculator +=  RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
+                
+            }
+            result.Intäkter = timeCalculator * 2;
+            result.GenomsnittligParkeradTid = timeCalculator / divider;
 
 
 
