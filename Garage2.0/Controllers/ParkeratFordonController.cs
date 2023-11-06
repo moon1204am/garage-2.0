@@ -9,6 +9,7 @@ using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Garage2._0.Controllers
 {
@@ -228,7 +229,29 @@ namespace Garage2._0.Controllers
             return View(nameof(Index), await model.ToListAsync());
         }
 
-      
+        public async Task<IActionResult> Statistik()
+        {
+            var parkeradeFordon = _context.ParkeratFordon;
+            var result = new StatistikViewModel();
+            int? count = 0;
+            
+            foreach (var item in parkeradeFordon)
+            {
+                count += item.AntalHjul;
+            }           
+            result.AntalHjulIGaraget = count;
+
+            foreach (var item in parkeradeFordon)
+            {
+                count += item.AntalHjul;
+            }
+
+
+
+            return View(result);
+        }
+
+
 
     }
 
