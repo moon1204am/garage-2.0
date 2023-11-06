@@ -1,0 +1,53 @@
+﻿@model KvittoViewModel
+
+@{
+    ViewData["Title"] = "Kvitto";
+}
+
+<h1>Kvitto</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegNr)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegNr)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AnkomstTid)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AnkomstTid)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UtchecksTid)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UtchecksTid)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkeringsTid)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkeringsTid)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pris)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pris)
+        </dd>
+
+    </dl>
+
+    <form asp-action="Kvitto">
+        @* <input type="hidden" asp-for="Id" /> *@
+        <input type="submit" value="Skriv ut kvittot" class="btn btn-success" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+    
+    
+
+</div>
+
