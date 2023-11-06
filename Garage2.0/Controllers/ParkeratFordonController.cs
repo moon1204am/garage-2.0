@@ -241,10 +241,10 @@ namespace Garage2._0.Controllers
             }           
             result.AntalHjulIGaraget = count;
 
-            foreach (var item in parkeradeFordon)
-            {
-                count += item.AntalHjul;
-            }
+            //foreach (var item in parkeradeFordon)
+            //{
+            //    TimeSpan tid = RaknaUtTid(kvittoViewModel.AnkomstTid, utcheckTid);
+            //}
 
 
 
