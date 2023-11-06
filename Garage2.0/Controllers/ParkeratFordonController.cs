@@ -286,31 +286,29 @@ namespace Garage2._0.Controllers
 
             return View(nameof(Index), result);
         }
-    }
-}
 
         public async Task<IActionResult> Statistik()
         {
-            var parkeradeFordon = _context.ParkeratFordon;          
+            var parkeradeFordon = _context.ParkeratFordon;
             var result = new StatistikViewModel();
             int? count = 0;
             double timeCalculator = 0;
             double divider = parkeradeFordon.Count();
-            
+
             foreach (var item in parkeradeFordon)
             {
                 count += item.AntalHjul;
-            }           
+            }
             result.AntalHjulIGaraget = count;
 
             foreach (var item in parkeradeFordon)
             {
-                timeCalculator +=  RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
-                
+                timeCalculator += RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
+
             }
             result.Intäkter = timeCalculator * 2;
             result.GenomsnittligParkeradTid = timeCalculator / divider;
-            result.AntalBatar = parkeradeFordon.Where(p=>p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
+            result.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
             result.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
             result.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
             result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
