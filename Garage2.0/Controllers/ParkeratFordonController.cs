@@ -147,7 +147,7 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(EditMessage));
+                return RedirectToAction(nameof(Index));
           
                 
             }
@@ -209,11 +209,7 @@ namespace Garage2._0.Controllers
             return View(nameof(Index), await model.ToListAsync());
         }
 
-        public IActionResult EditMessage()
-        {
-            ViewBag.EditCompleteMessage = "Uppdateringen är slutförd";
-            return View();
-        }
+      
 
     }
 
