@@ -103,7 +103,7 @@ namespace Garage2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FordonsTyp,RegNr,Farg,Marke,Modell,AntalHjul,AnkomstTid")] ParkeratFordon parkeratFordon)
+        public async Task<IActionResult> Edit(int id, ParkeratFordon parkeratFordon)
         {
             if (id != parkeratFordon.Id)
             {
@@ -115,6 +115,8 @@ namespace Garage2._0.Controllers
                 try
                 {
                     _context.Update(parkeratFordon);
+
+                    _context.Entry(parkeratFordon).Property(p => p.AnkomstTid).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -128,7 +130,8 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EditMessage");
+               // return RedirectToAction(nameof(Index));
             }
             return View(parkeratFordon);
         }
@@ -220,6 +223,12 @@ namespace Garage2._0.Controllers
 
 
             return View(nameof(Index), await model.ToListAsync());
+        }
+
+        public IActionResult EditMessage()
+        {
+            ViewBag.EditCompleteMessage = "Uppdateringen är slutförd";
+            return View();
         }
 
     }
