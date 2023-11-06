@@ -64,7 +64,7 @@ namespace Garage2._0.Controllers
                 var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == fordonViewModel.RegNr);
                 if (fordonReg != null)
                 {
-                    ModelState.AddModelError("RegNr", "Reg numret existerar redan.");
+                    ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                     return View(fordonViewModel);
                 }
                 var fordon = new ParkeratFordon
@@ -93,7 +93,7 @@ namespace Garage2._0.Controllers
             {
                 return Json(true);
             }
-            return Json($"Reg nummer {fordon.RegNr} existerar redan.");
+            return Json($"Registreringsnumret existerar redan.");
         }
 
         // GET: ParkeratFordons/Edit/5

@@ -13,7 +13,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <select class="form-control" asp-items="@Html.GetEnumSelectList<FordonsTyp>()">
+                <select class="form-control" asp-for="FordonsTyp" asp-items="@Html.GetEnumSelectList<FordonsTyp>()">
                     <option selected="selected" value="">Välj fordon</option>
                 </select>
             </div>
@@ -46,7 +46,6 @@
                 <input type="submit" value="Parkera" class="btn btn-primary" />
             </div>
         </form>
-        <p><strong>@TempData["ErrorParkeraMsg"]</strong></p>
     </div>
 </div>
 
