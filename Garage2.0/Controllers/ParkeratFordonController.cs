@@ -3,22 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
-using Garage2._0.Services;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Garage2._0.Controllers
 {
     public class ParkeratFordonController : Controller
     {
         private readonly Garage2_0Context _context;
-        private IValidering _validering;
         private const int timPris = 60;
 
-        public ParkeratFordonController(Garage2_0Context context, IValidering validering)
+        public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
-            _validering = validering;
         }
 
         // GET: ParkeratFordons
@@ -68,7 +63,7 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FordonViewModel fordonViewModel)
         {
-            if (_validering.RegNrExisterar(_context, fordonViewModel.RegNr))
+            if (RegNrExisterarValidering(fordonViewModel.RegNr, false))
             {
                 ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                 return View(fordonViewModel);
@@ -88,7 +83,7 @@ namespace Garage2._0.Controllers
                 };
                 _context.Add(fordon);
                 await _context.SaveChangesAsync();
-                TempData["OkParkeraMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
+                TempData["OkFeedbackMsg"] = $"Parkerat fordon med reg nr {fordonViewModel.RegNr}";
                 return RedirectToAction(nameof(Index));
             }
             return View(fordonViewModel);
@@ -145,7 +140,7 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            if (_validering.RegNrExisterar(_context, parkeratFordonViewModel.RegNr))
+            if (RegNrExisterarValidering(parkeratFordonViewModel.RegNr, true))
             {
                 ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                 return View(parkeratFordonViewModel);
@@ -165,7 +160,7 @@ namespace Garage2._0.Controllers
                     _context.Update(parkeratFordon);
 
                     await _context.SaveChangesAsync();
-                    TempData["OkEditeraMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
+                    TempData["OkFeedbackMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -216,7 +211,7 @@ namespace Garage2._0.Controllers
             {
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
-                 TempData["OkParkeraMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
+                 TempData["OkFeedbackMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
 
                 ////Kvitto?
 
@@ -239,7 +234,7 @@ namespace Garage2._0.Controllers
                .FirstOrDefaultAsync(m => m.Id == id);
             _context.ParkeratFordon.Remove(parkeratFordon);
             await _context.SaveChangesAsync();
-            TempData["OkParkeraMsg"] = $"Hämtat fordon med reg nr {parkeratFordon.RegNr} samt kvitto.";
+            TempData["OkFeedbackMsg"] = $"Hämtat fordon med reg nr {parkeratFordon.RegNr} samt kvitto.";
 
             DateTime utcheckTid = DateTime.Now;
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
@@ -310,6 +305,27 @@ namespace Garage2._0.Controllers
             }).ToListAsync();
 
             return View(nameof(Index), result);
+        }
+
+        private bool RegNrExisterarValidering(string regNr, bool editerar)
+        {
+            var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
+            if(editerar)
+            {
+                if (fordonReg == null || fordonReg.RegNr == regNr)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                if (fordonReg == null)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public async Task<IActionResult> Statistik()
