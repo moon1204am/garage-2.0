@@ -18,6 +18,8 @@ namespace Garage2._0.Controllers
         private readonly Garage2_0Context _context;
 
         private const int timPris = 60;
+        private ParkeratFordon[] GarageArray = new ParkeratFordon[150];
+        private int antalParkeradeFordon = 0;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
@@ -306,6 +308,28 @@ namespace Garage2._0.Controllers
             result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
             result.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             return View(result);
+        }
+
+        public IActionResult ParkeraArray(ParkeratFordon parkeratFordon)
+        {
+            
+            
+            if (parkeratFordon.FordonsTyp == FordonsTyp.Flygplan)
+            {
+                for (int i = 0; i < GarageArray.Length; i++) 
+                {
+                    if (GarageArray[i] == null || GarageArray[i+1] == null || GarageArray[i+2] == null)
+                    {
+                        GarageArray[i] = parkeratFordon;
+                        GarageArray[i + 1] = parkeratFordon;
+                        GarageArray[i + 2] = parkeratFordon;
+                    }
+
+                }
+                antalParkeradeFordon += 3;
+            }
+            return View(nameof(Index));
+
         }
     }
 }
