@@ -25,19 +25,18 @@ namespace Garage2._0.Controllers
         }
 
         // GET: ParkeratFordons
-        public async Task<IActionResult> Index(IndexViewModel index)
+        public async Task<IActionResult> Index()
         {
-            var parkeradeFordon = _context.ParkeratFordon;
-            index.AntalLedigaPlatser = 15;
-         //  parkeradeFordon.
-           return View(index);
-            
-            //return _context.ParkeratFordon != null ? 
-                         
-            //    View(index):
-            //    //View(await _context.ParkeratFordon.ToListAsync()) :
-            //              Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
+           
+            var fordon = await _context.ParkeratFordon.ToListAsync();
 
+            var index = new IndexViewModel
+            {
+                ParkeradeFordon = fordon               
+            };
+            index.AntalLedigaPlatser = 15;
+            return View(index);
+   
 
         }
 
@@ -274,16 +273,22 @@ namespace Garage2._0.Controllers
           return (_context.ParkeratFordon?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> Filter(string regnr)
+        public async Task<IActionResult> Filter(IndexViewModel viewModel)
         {
-            var model = string.IsNullOrWhiteSpace(regnr) ?
-                                                _context.ParkeratFordon :
-                                                _context.ParkeratFordon.Where(m => m.RegNr.StartsWith(regnr));
+            var query = string.IsNullOrWhiteSpace(viewModel.RegNr) ?
+                                               _context.ParkeratFordon :
+                                               _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(viewModel.RegNr));
 
-           
+         
+            var valdaFordon = await query.ToListAsync();
 
+            var fordon = new IndexViewModel
+            {
+                ParkeradeFordon = valdaFordon              
+            };
+            fordon.AntalLedigaPlatser = 14;
 
-            return View(nameof(Index), await model.ToListAsync());
+            return View(nameof(Index), fordon);
         }
 
         public async Task<IActionResult> Statistik()

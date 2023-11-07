@@ -7,7 +7,7 @@ namespace Garage2._0.Models.ViewModels
     public class IndexViewModel
     {
 
-        public IEnumerable<IndexViewModel> ParkeradeFordon { get; set; } = new List<IndexViewModel>();
+        public IEnumerable<ParkeratFordon> ParkeradeFordon { get; set; } = new List<ParkeratFordon>();
         public int AntalLedigaPlatser {  get; set; }
         public int Id { get; set; }
        
