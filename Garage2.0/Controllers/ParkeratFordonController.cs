@@ -17,6 +17,7 @@ namespace Garage2._0.Controllers
         private readonly Garage2_0Context _context;
 
         private const int timPris = 60;
+        private const int minutPris = 1;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
@@ -240,7 +241,7 @@ namespace Garage2._0.Controllers
 
             DateTime utcheckTid = DateTime.Now;
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
-            int totalPris = RaknaUtPris(timPris, tid);
+            int totalPris = RaknaUtPris(minutPris, tid);
 
             var model = new KvittoViewModel
             {
@@ -254,25 +255,7 @@ namespace Garage2._0.Controllers
             return View(model);
 
         }
-            //private KvittoViewModel Kvitto(ParkeratFordon parkeratFordon)
-            //{
-            //    DateTime utcheckTid = DateTime.Now;
-            //    TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
-            //    int totalPris = RaknaUtPris(timPris, tid);
-
-            //    var model = new KvittoViewModel
-            //    {
-            //        RegNr = parkeratFordon.RegNr,
-            //        AnkomstTid = parkeratFordon.AnkomstTid,
-            //        UtchecksTid = utcheckTid,
-            //        Pris = timPris,
-            //        TotalPris = totalPris
-
-            //    };
-
-            //    return model;
-            //}
-
+            
             private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
             return utckeck.Subtract(ankomst);
@@ -281,7 +264,7 @@ namespace Garage2._0.Controllers
 
         private int RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
-            return parkeringstid.Minutes * pris /60;
+            return (int)parkeringstid.TotalMinutes * pris ;
             
 
         }
