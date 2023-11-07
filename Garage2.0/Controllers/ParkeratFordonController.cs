@@ -10,6 +10,7 @@ using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Garage2._0.Controllers
 {
@@ -312,24 +313,60 @@ namespace Garage2._0.Controllers
 
         public IActionResult ParkeraArray(ParkeratFordon parkeratFordon)
         {
-            
-            
-            if (parkeratFordon.FordonsTyp == FordonsTyp.Flygplan)
-            {
-                for (int i = 0; i < GarageArray.Length; i++) 
-                {
-                    if (GarageArray[i] == null || GarageArray[i+1] == null || GarageArray[i+2] == null)
-                    {
-                        GarageArray[i] = parkeratFordon;
-                        GarageArray[i + 1] = parkeratFordon;
-                        GarageArray[i + 2] = parkeratFordon;
-                    }
 
-                }
-                antalParkeradeFordon += 3;
+
+            switch (parkeratFordon.FordonsTyp)
+            {
+
+                case FordonsTyp.Flygplan:
+                    ParkeraFlygplan(parkeratFordon);
+                    break;
+                case FordonsTyp.Motorcykel:
+                    ParkeraMotorcykel(parkeratFordon);
+                    break;
+                case FordonsTyp.Buss:
+                    ParkeraBuss(parkeratFordon);
+                    break;
+                case FordonsTyp.Bil:
+                    ParkeraBil(parkeratFordon);
+                    break;
+                case FordonsTyp.Bat:
+                    ParkeraBat(parkeratFordon);
+                    break;
+                    default;
+
+
+
+
+                    //if (parkeratFordon.FordonsTyp == FordonsTyp.Flygplan)
+                    //{
+
+                    //}
+
+
             }
             return View(nameof(Index));
 
         }
+
+        IActionResult ParkeraFlygplan(ParkeratFordon parkeratFordon)
+        {       
+                int i;
+                for (i = 0; i < GarageArray.Length; i++)
+            {
+                if (GarageArray[i] == null && GarageArray[i + 1] == null && GarageArray[i + 2] == null)
+                {
+                    GarageArray[i] = parkeratFordon;
+                    GarageArray[i + 1] = parkeratFordon;
+                    GarageArray[i + 2] = parkeratFordon;
+                }
+                }
+                antalParkeradeFordon += 3;
+              //  parkeringsPlats = i;
+
+                return View(nameof(Index));
+        }
+
+
     }
 }
