@@ -216,14 +216,15 @@ namespace Garage2._0.Controllers
             {
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
+                 TempData["OkParkeraMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
 
-                //Kvitto?
+                ////Kvitto?
 
 
-                //Ja 
-                var model = Kvitto(parkeratFordon);
-                //skicka till kvittovy
-                return View("Kvitto", model);
+                ////Ja 
+                //var model = Kvitto(parkeratFordon);
+                ////skicka till kvittovy
+                //return View("Kvitto", model);
             }
             
 
@@ -231,9 +232,15 @@ namespace Garage2._0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
-        private KvittoViewModel Kvitto(ParkeratFordon parkeratFordon)
+        public async Task<IActionResult> Kvitto(int? id)
         {
+            if (id == null) { return NotFound(); }
+            var parkeratFordon = await _context.ParkeratFordon
+               .FirstOrDefaultAsync(m => m.Id == id);
+            _context.ParkeratFordon.Remove(parkeratFordon);
+            await _context.SaveChangesAsync();
+            TempData["OkParkeraMsg"] = $"Hämtat fordon med reg nr {parkeratFordon.RegNr} samt kvitto.";
+
             DateTime utcheckTid = DateTime.Now;
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
             int totalPris = RaknaUtPris(timPris, tid);
@@ -245,13 +252,31 @@ namespace Garage2._0.Controllers
                 UtchecksTid = utcheckTid,
                 Pris = timPris,
                 TotalPris = totalPris
-
             };
 
-            return model;
+            return View(model);
+
         }
-        
-        private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
+            //private KvittoViewModel Kvitto(ParkeratFordon parkeratFordon)
+            //{
+            //    DateTime utcheckTid = DateTime.Now;
+            //    TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
+            //    int totalPris = RaknaUtPris(timPris, tid);
+
+            //    var model = new KvittoViewModel
+            //    {
+            //        RegNr = parkeratFordon.RegNr,
+            //        AnkomstTid = parkeratFordon.AnkomstTid,
+            //        UtchecksTid = utcheckTid,
+            //        Pris = timPris,
+            //        TotalPris = totalPris
+
+            //    };
+
+            //    return model;
+            //}
+
+            private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
             return utckeck.Subtract(ankomst);
             

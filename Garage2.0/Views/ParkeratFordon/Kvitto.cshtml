@@ -38,12 +38,18 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Pris)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalPris)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalPris)
+        </dd>
 
     </dl>
 
     <form asp-action="Kvitto">
         @* <input type="hidden" asp-for="Id" /> *@
-        <input type="submit" value="Skriv ut kvittot" class="btn btn-success" /> |
+        <a  class="btn btn-success" onclick="window.print()">Skriv ut kvittot</a> |
         <a asp-action="Index">Back to List</a>
     </form>
     
