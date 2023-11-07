@@ -25,11 +25,18 @@ namespace Garage2._0.Controllers
         }
 
         // GET: ParkeratFordons
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(IndexViewModel index)
         {
-            return _context.ParkeratFordon != null ? 
-                          View(await _context.ParkeratFordon.ToListAsync()) :
-                          Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
+            var parkeradeFordon = _context.ParkeratFordon;
+            index.AntalLedigaPlatser = 15;
+         //  parkeradeFordon.
+           return View(index);
+            
+            //return _context.ParkeratFordon != null ? 
+                         
+            //    View(index):
+            //    //View(await _context.ParkeratFordon.ToListAsync()) :
+            //              Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
 
 
         }
