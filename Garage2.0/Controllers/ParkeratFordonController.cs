@@ -10,10 +10,13 @@ namespace Garage2._0.Controllers
     {
         private readonly Garage2_0Context _context;
         private const int timPris = 60;
+        private const int capacity = 20;
+        private decimal[] garage = new decimal[capacity];
 
         public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
+            InitGarage();
         }
 
         // GET: ParkeratFordons
@@ -25,12 +28,43 @@ namespace Garage2._0.Controllers
                 FordonsTyp = f.FordonsTyp,
                 RegNr = f.RegNr,
                 AnkomstTid = f.AnkomstTid
-
             });
+
             return View(await fordon.ToListAsync());
         }
 
+        private void InitGarage()
+        {
+            var fordon = _context.ParkeratFordon.ToList();
+            var sistaFordon = fordon.Select(f => f.ParkeringsIndex).Max();
+            int index = 0;
 
+            for (int i = 0; i < sistaFordon + 1; i++)
+            {
+                switch (fordon[index].FordonsTyp)
+                {
+                    case FordonsTyp.Flygplan:
+                    case FordonsTyp.Bat:
+                        garage[fordon[index].ParkeringsIndex] = 1m;
+                        garage[fordon[index].ParkeringsIndex + 1] = 1m;
+                        garage[fordon[index].ParkeringsIndex + 2] = 1m;
+                        i += 2;
+                        break;
+                    case FordonsTyp.Bil:
+                        garage[fordon[index].ParkeringsIndex] = 1m;
+                        break;
+                    case FordonsTyp.Motorcykel:
+                        garage[fordon[index].ParkeringsIndex] = 1/3m;
+                        break;
+                    case FordonsTyp.Buss:
+                        garage[fordon[index].ParkeringsIndex] = 1m;
+                        garage[fordon[index].ParkeringsIndex + 1] = 1m;
+                        i += 1;
+                        break;
+                }
+                index++;
+            }
+        }
         
         // GET: ParkeratFordons/Details/5
         public async Task<IActionResult> Details(int? id)
