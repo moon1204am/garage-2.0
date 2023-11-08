@@ -427,15 +427,15 @@ namespace Garage2._0.Controllers
             return upptagnaPlatser;
         }
 
-        private StatistikViewModel AntalFordonPerSort(StatistikViewModel resultat)
+        private StatistikViewModel AntalFordonPerSort(StatistikViewModel statistikModell)
         {
             var parkeradeFordon =  _context.ParkeratFordon;
-            resultat.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
-            resultat.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
-            resultat.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
-            resultat.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
-            resultat.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
-            return (resultat);
+            statistikModell.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
+            statistikModell.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
+            statistikModell.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
+            statistikModell.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
+            statistikModell.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
+            return (statistikModell);
         }
 
 
