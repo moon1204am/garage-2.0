@@ -11,6 +11,7 @@ namespace Garage2._0.Controllers
         private readonly Garage2_0Context _context;
         private const int timPris = 60;
         private const int minutPris = 1;
+        private const double capacity = 100;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
@@ -20,15 +21,17 @@ namespace Garage2._0.Controllers
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-            var fordon = _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
-            {
-                Id = f.Id,
-                FordonsTyp = f.FordonsTyp,
-                RegNr = f.RegNr,
-                AnkomstTid = f.AnkomstTid
+           
 
-            });
-            return View(await fordon.ToListAsync());
+            var fordon = await _context.ParkeratFordon.ToListAsync();
+            
+
+            var index = new FordonOversiktViewModel
+            {
+                ParkeradeFordon = fordon
+            };
+            index.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
+            return View(index);
         }
 
 
@@ -272,22 +275,23 @@ namespace Garage2._0.Controllers
           return (_context.ParkeratFordon?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> Filter(string regnr)
+        public async Task<IActionResult> Filter(FordonOversiktViewModel fordonViewModel)
         {
-            var model = string.IsNullOrWhiteSpace(regnr) ?
-                                                _context.ParkeratFordon :
-                                                _context.ParkeratFordon.Where(m => m.RegNr.StartsWith(regnr));
+            var query = string.IsNullOrWhiteSpace(fordonViewModel.RegNr) ?
+                                               _context.ParkeratFordon :
+                                               _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(fordonViewModel.RegNr));
 
-            var result = await model.Select(f => new FordonOversiktViewModel
+
+            var valdaFordon = await query.ToListAsync();
+
+            var fordon = new FordonOversiktViewModel            
             {
-                Id = f.Id,
-                FordonsTyp = f.FordonsTyp,
-                RegNr = f.RegNr,
-                AnkomstTid = f.AnkomstTid
+                ParkeradeFordon = valdaFordon
+            };
+            fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
 
-            }).ToListAsync();
 
-            return View(nameof(Index), result);
+            return View(nameof(Index), fordon);
         }
 
         private bool RegNrExisterarValidering(string regNr, bool editerar)
@@ -330,7 +334,7 @@ namespace Garage2._0.Controllers
                 timeCalculator += RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
 
             }
-            result.Intäkter = timeCalculator * 2;
+            result.Intäkter = timeCalculator * minutPris;
             result.GenomsnittligParkeradTid = timeCalculator / divider;
             result.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
             result.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
@@ -338,6 +342,19 @@ namespace Garage2._0.Controllers
             result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
             result.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             return View(result);
+        }
+
+        private double RaknaLedigaPlatser()
+        {
+            var parkeradeFordon = _context.ParkeratFordon;
+            double upptagnaPlatser = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count() * 3
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count() * 3
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count() * 2
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
+            double output = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
+            upptagnaPlatser += output / 3;
+            return upptagnaPlatser;
+
         }
     }
 }

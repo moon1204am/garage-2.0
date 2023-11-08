@@ -12,5 +12,8 @@ namespace Garage2._0.Models.ViewModels
         public string RegNr { get; set; } = string.Empty;
         [Display(Name = "Ankomsttid")]
         public DateTime AnkomstTid { get; set; }
+
+        public IEnumerable<ParkeratFordon> ParkeradeFordon { get; set; } = new List<ParkeratFordon>();
+        public double AntalLedigaPlatser { get; set; }
     }
 }
