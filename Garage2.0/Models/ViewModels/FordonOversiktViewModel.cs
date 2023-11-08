@@ -12,7 +12,5 @@ namespace Garage2._0.Models.ViewModels
         public string RegNr { get; set; } = string.Empty;
         [Display(Name = "Ankomsttid")]
         public DateTime AnkomstTid { get; set; }
-        [Display(Name = "Antal lediga platser")]
-        public int AntalLedigaPlatser { get; set; }
     }
 }

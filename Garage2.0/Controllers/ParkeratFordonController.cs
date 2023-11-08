@@ -12,58 +12,67 @@ namespace Garage2._0.Controllers
         private const int timPris = 60;
         private const int capacity = 20;
         private decimal[] garage = new decimal[capacity];
+        private int antal;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
             InitGarage();
+            //Console.ReadLine();
         }
+
+        public int AntalFordonIGaraget => antal;
 
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-            var fordon = _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
+            var fordon = await _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
             {
                 Id = f.Id,
                 FordonsTyp = f.FordonsTyp,
                 RegNr = f.RegNr,
-                AnkomstTid = f.AnkomstTid
-            });
+                AnkomstTid = f.AnkomstTid,
+            }).ToListAsync();
 
-            return View(await fordon.ToListAsync());
+            var model = new StartsidaViewModel
+            {
+                Fordon = fordon,
+                ParkeringsOversikt = garage,
+                AntalLedigaPlatser = capacity - antal
+            };
+
+            return View(model);
         }
 
         private void InitGarage()
         {
             var fordon = _context.ParkeratFordon.ToList();
-            var sistaFordon = fordon.Select(f => f.ParkeringsIndex).Max();
+            antal = fordon.Count;
             int index = 0;
-
-            for (int i = 0; i < sistaFordon + 1; i++)
+            foreach (var f in fordon)
             {
                 switch (fordon[index].FordonsTyp)
                 {
                     case FordonsTyp.Flygplan:
                     case FordonsTyp.Bat:
-                        garage[fordon[index].ParkeringsIndex] = 1m;
-                        garage[fordon[index].ParkeringsIndex + 1] = 1m;
-                        garage[fordon[index].ParkeringsIndex + 2] = 1m;
-                        i += 2;
+                        garage[f.ParkeringsIndex] = 1m;
+                        garage[f.ParkeringsIndex + 1] = 1m;
+                        garage[f.ParkeringsIndex + 2] = 1m;
                         break;
                     case FordonsTyp.Bil:
-                        garage[fordon[index].ParkeringsIndex] = 1m;
+                        garage[f.ParkeringsIndex] = 1m;
                         break;
                     case FordonsTyp.Motorcykel:
-                        garage[fordon[index].ParkeringsIndex] = 1/3m;
+                        garage[f.ParkeringsIndex] = 1 / 3m;
                         break;
                     case FordonsTyp.Buss:
-                        garage[fordon[index].ParkeringsIndex] = 1m;
-                        garage[fordon[index].ParkeringsIndex + 1] = 1m;
-                        i += 1;
+                        garage[f.ParkeringsIndex] = 1m;
+                        garage[f.ParkeringsIndex + 1] = 1m;
                         break;
                 }
                 index++;
             }
+            int i = 1;
         }
         
         // GET: ParkeratFordons/Details/5
@@ -105,6 +114,8 @@ namespace Garage2._0.Controllers
 
             if (ModelState.IsValid)
             {
+                //LedigaPlatserFinns(fordonViewModel.FordonsTyp);
+
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -122,6 +133,29 @@ namespace Garage2._0.Controllers
             }
             return View(fordonViewModel);
         }
+
+        //private void HittaLedigaPlatser(FordonsTyp fordonsTyp)
+        //{
+        //    for(int i = 0; i < antal; i++)
+        //    {
+        //        if (garage[i] == 0)
+        //        switch(fordonsTyp)
+        //            {
+
+        //            }
+        //        {
+        //            case FordonsTyp.Flygplan:
+        //            case FordonsTyp.Bat:
+        //                break;
+        //            case FordonsTyp.Bil:
+        //                break;
+        //            case FordonsTyp.Motorcykel:
+        //                break;
+        //            case FordonsTyp.Buss:
+        //                break;
+        //        }
+        //    }
+        //}
 
         [AcceptVerbs("GET", "POST")]
         public IActionResult RegNrExisterar(string regNr)
