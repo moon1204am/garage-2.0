@@ -4,10 +4,10 @@
     ViewData["Title"] = "Välkommen";
 }
 
-<h1>Åhlens Parkering City</h1>
+<h1 class="display-6">Åhlens Parkering City</h1>
 
 <p>  
-    <a asp-action="Create" class=" badge text-wrap btnAhlens p-2 ">Parkera Fordon</a> <a asp-action="Statistik" class="badge text-wrap btnAhlens p-2">Statistik</a>
+    <a asp-action="Create" class=" badge text-wrap text-decoration-none btnAhlens fs-6 p-3 ">Parkera Fordon</a> <a asp-action="Statistik" class="badge text-wrap text-decoration-none btnAhlens fs-6 p-3">Statistik</a>
 </p>
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">

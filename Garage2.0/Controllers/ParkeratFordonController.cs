@@ -213,14 +213,6 @@ namespace Garage2._0.Controllers
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
                  TempData["OkFeedbackMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
-
-                ////Kvitto?
-
-
-                ////Ja 
-                //var model = Kvitto(parkeratFordon);
-                ////skicka till kvittovy
-                //return View("Kvitto", model);
             }
             
 
@@ -246,6 +238,7 @@ namespace Garage2._0.Controllers
                 RegNr = parkeratFordon.RegNr,
                 AnkomstTid = parkeratFordon.AnkomstTid,
                 UtchecksTid = utcheckTid,
+                ParkeringsTid = tid,
                 Pris = timPris,
                 TotalPris = totalPris
             };
