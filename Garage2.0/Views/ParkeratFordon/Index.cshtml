@@ -1,14 +1,14 @@
-﻿@model StartsidaViewModel
+﻿@model IEnumerable<FordonOversiktViewModel>
 
 @{
     ViewData["Title"] = "Välkommen";
-    int i = 1;
 }
 
 <h1>Åhlens Parkering City</h1>
 
 <p>  
     <a asp-action="Create">Parkera Fordon</a> <a asp-action="Statistik">Statistik</a>
+    <a asp-action="GaragePlatser">Se lediga platser</a>
 </p>
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">
@@ -23,43 +23,5 @@
 </form>
 <p class="alert-info"><strong>@TempData["OkFeedbackMsg"]</strong></p>
 
-<partial name="ParkListaPartial" model="Model.Fordon"/>
-
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AntalLedigaPlatser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AntalLedigaPlatser)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkeringsOversikt)
-        </dt>
-        <dd class="col-sm-10">
-            <table>
-                <tbody>
-                    @foreach (var item in Model.ParkeringsOversikt)
-                    {
-                        <tr>
-                            <td>
-                                <p>Plats @i</p>
-                                @{decimal plats = item;}
-                                @if(plats == 1)
-                                {
-                                    <p>Upptagen</p>
-                                }
-                                else
-                                {
-                                    <p>Ledig</p>
-                                }
-                                @{i++;}
-                                @* @Html.DisplayFor(model => item) *@
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </dd>
-    </dl>
+<partial name="ParkListaPartial"/>
 
