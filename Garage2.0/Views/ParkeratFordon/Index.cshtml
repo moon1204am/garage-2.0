@@ -7,7 +7,7 @@
 <h1>Åhlens Parkering City</h1>
 
 <p>  
-    <a asp-action="Create">Parkera Fordon</a> <a asp-action="Statistik">Statistik</a>
+    <a asp-action="Create" class=" badge text-wrap btnAhlens p-2 ">Parkera Fordon</a> <a asp-action="Statistik" class="badge text-wrap btnAhlens p-2">Statistik</a>
 </p>
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">
@@ -16,7 +16,7 @@
            
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-search">Sök</i></button>
+            <button type="submit" class="btn btnAhlens"><i class="fa fa-search">Sök</i></button>
         </div>
     </div>
 </form>
