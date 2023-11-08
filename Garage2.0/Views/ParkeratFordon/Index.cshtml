@@ -1,9 +1,8 @@
-﻿﻿
-@model FordonOversiktViewModel
+﻿@model StartsidaViewModel
 
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Välkommen";
 }
 
 <h1>Åhlens Parkering City</h1>
@@ -12,6 +11,7 @@
 
 <p>  
     <a asp-action="Create">Parkera Fordon</a> <a asp-action="Statistik">Statistik</a>
+    <a asp-action="GaragePlatser">Se lediga platser</a>
 </p>
 
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
@@ -25,7 +25,7 @@
         </div>
     </div>
 </form>
-<p class="alert-info"><strong>@TempData["OkParkeraMsg"]</strong></p>
+<p class="alert-info"><strong>@TempData["OkFeedbackMsg"]</strong></p>
 
 
 <partial name="ParkListaPartial" model="@Model.ParkeradeFordon" />

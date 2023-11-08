@@ -1,0 +1,90 @@
+﻿@model GarageOversiktViewModel
+
+@{
+    ViewData["Title"] = "Översikt";
+    int i = 1;
+}
+
+@* <div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AntalLedigaPlatser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AntalLedigaPlatser)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LedigaPlatser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LedigaPlatser)
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AntalLedigaPlatser)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LedigaPlatser)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.DisplayFor(model => model.LedigaPlatser)
+                    @foreach (var item in Model.ParkeringsOversikt)
+                    {
+                        <tr>
+                            <td>
+                                <p>Plats @i</p>
+                                @{
+                                    decimal plats = item;
+                                }
+                                @if (plats == 1)
+                                {
+                                    <p>Upptagen</p>
+                                }
+                                else
+                                {
+                                    <p>Ledig</p>
+                                }
+                                @{
+                                    i++;
+                                }
+                                @Html.DisplayFor(model => item)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+ *@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AntalLedigaPlatser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LedigaPlatser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.AntalLedigaPlatser)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.LedigaPlatser)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index">Tillbaka till startsida</a>
+</div>
