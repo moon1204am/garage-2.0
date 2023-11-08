@@ -397,33 +397,24 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Statistik()
         {
-            var parkeradeFordon = _context.ParkeratFordon;
-            var result = new StatistikViewModel();
-            int? count = 0;
-            double timeCalculator = 0;
-            double divider = parkeradeFordon.Count();
-
+            var parkeradeFordon = await _context.ParkeratFordon.ToListAsync();
+            var statistikModell = new StatistikViewModel();          
+            double totalaAntaletMinuter = 0;
+            double antalParkeradeFordon = parkeradeFordon.Count;
+            var hjul = parkeradeFordon.Sum(v => v.AntalHjul);
+            
             foreach (var item in parkeradeFordon)
             {
-                count += item.AntalHjul;
-            }
-            result.AntalHjulIGaraget = count;
-
-            foreach (var item in parkeradeFordon)
-            {
-                timeCalculator += RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
+                totalaAntaletMinuter += RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
 
             }
-            result.Intäkter = timeCalculator * minutPris;
-            result.GenomsnittligParkeradTid = timeCalculator / divider;
-            result.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
-            result.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
-            result.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
-            result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
-            result.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
-            return View(result);
+
+            AntalFordonPerSort(statistikModell);
+            statistikModell.AntalHjulIGaraget = hjul;
+            statistikModell.Intäkter = totalaAntaletMinuter * minutPris;
+            statistikModell.GenomsnittligParkeradTid = totalaAntaletMinuter / antalParkeradeFordon;
+            return View(statistikModell);
         }
-
         private double RaknaLedigaPlatser()
         {
             var parkeradeFordon = _context.ParkeratFordon;
@@ -434,7 +425,19 @@ namespace Garage2._0.Controllers
             double mcPlatser = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             upptagnaPlatser += mcPlatser * .33;
             return upptagnaPlatser;
-
         }
+
+        private StatistikViewModel AntalFordonPerSort(StatistikViewModel resultat)
+        {
+            var parkeradeFordon =  _context.ParkeratFordon;
+            resultat.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
+            resultat.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
+            resultat.AntalBussar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count();
+            resultat.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
+            resultat.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
+            return (resultat);
+        }
+
+
     }
 }
