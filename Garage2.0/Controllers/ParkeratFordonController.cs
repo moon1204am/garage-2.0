@@ -352,7 +352,7 @@ namespace Garage2._0.Controllers
                 + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count() * 2
                 + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
             double mcPlatser = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
-            upptagnaPlatser += mcPlatser / 3;
+            upptagnaPlatser += mcPlatser * .33;
             return upptagnaPlatser;
 
         }
