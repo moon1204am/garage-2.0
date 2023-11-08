@@ -227,16 +227,20 @@ namespace Garage2._0.Controllers
                 try
                 {
                     var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
-                    parkeratFordon.FordonsTyp = parkeratFordonViewModel.FordonsTyp;
-                    parkeratFordon.RegNr = parkeratFordonViewModel.RegNr;
-                    parkeratFordon.Farg = parkeratFordonViewModel.Farg;
-                    parkeratFordon.Marke = parkeratFordonViewModel.Marke;
-                    parkeratFordon.Modell = parkeratFordonViewModel.Modell;
-                    parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
-                    _context.Update(parkeratFordon);
+                    if(parkeratFordon != null)
+                    {
+                        parkeratFordon.FordonsTyp = parkeratFordonViewModel.FordonsTyp;
+                        parkeratFordon.RegNr = parkeratFordonViewModel.RegNr;
+                        parkeratFordon.Farg = parkeratFordonViewModel.Farg;
+                        parkeratFordon.Marke = parkeratFordonViewModel.Marke;
+                        parkeratFordon.Modell = parkeratFordonViewModel.Modell;
+                        parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
+                        _context.Update(parkeratFordon);
 
+                        
+                        TempData["OkFeedbackMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
+                    }
                     await _context.SaveChangesAsync();
-                    TempData["OkFeedbackMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -278,10 +282,6 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ParkeratFordon == null)
-            {
-                return Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
-            }
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
             if (parkeratFordon != null)
             {
@@ -329,7 +329,7 @@ namespace Garage2._0.Controllers
 
         }
             
-            private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
+        private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
             return utckeck.Subtract(ankomst);
             
@@ -338,8 +338,6 @@ namespace Garage2._0.Controllers
         private int RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
             return (int)parkeringstid.TotalMinutes * pris ;
-            
-
         }
 
         private bool ParkeratFordonExists(int id)
@@ -368,8 +366,6 @@ namespace Garage2._0.Controllers
                 AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
 
             };
-            //fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
-
 
             return View(nameof(Index), fordon);
         }
@@ -397,7 +393,7 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Statistik()
         {
-            var parkeradeFordon = _context.ParkeratFordon;
+            var parkeradeFordon = await _context.ParkeratFordon.ToListAsync();
             var result = new StatistikViewModel();
             int? count = 0;
             double timeCalculator = 0;
