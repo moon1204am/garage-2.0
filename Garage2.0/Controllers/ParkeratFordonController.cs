@@ -11,6 +11,7 @@ namespace Garage2._0.Controllers
     {
         private readonly Garage2_0Context _context;
         private const int timPris = 60;
+        private const int minutPris = 1;
         private const int capacity = 20;
         private double[] garage = new double[capacity];
         private double antal;
@@ -26,23 +27,22 @@ namespace Garage2._0.Controllers
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-            var fordon = await _context.ParkeratFordon.ToListAsync();
-            //var fordon = _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
-            //{
-            //    Id = f.Id,
-            //    FordonsTyp = f.FordonsTyp,
-            //    RegNr = f.RegNr,
-            //    AnkomstTid = f.AnkomstTid
-
-            //});
-
-            var index = new FordonOversiktViewModel
+            var fordon = await _context.ParkeratFordon.Select(v => new FordonOversiktViewModel
             {
-                ParkeradeFordon = fordon
-            };
-            index.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
+                Id = v.Id,
+                FordonsTyp = v.FordonsTyp,
+                RegNr = v.RegNr,
+                AnkomstTid = v.AnkomstTid
 
-            return View(await fordon.ToListAsync());
+            }).ToListAsync();
+
+            var index = new StartsidaViewModel
+            {
+                ParkeradeFordon = fordon,
+                AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
+            };
+
+            return View(index);
         }
 
         public IActionResult GaragePlatser()
@@ -354,13 +354,21 @@ namespace Garage2._0.Controllers
                                                _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(fordonViewModel.RegNr));
 
 
-            var valdaFordon = await query.ToListAsync();
-
-            var fordon = new FordonOversiktViewModel            
+            var valdaFordon = await query.Select(v => new FordonOversiktViewModel
             {
-                ParkeradeFordon = valdaFordon
+                Id = v.Id,
+                FordonsTyp = v.FordonsTyp,
+                RegNr = v.RegNr,
+                AnkomstTid = v.AnkomstTid
+            }).ToListAsync();
+
+            var fordon = new StartsidaViewModel            
+            {
+                ParkeradeFordon = valdaFordon,
+                AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
+
             };
-            fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
+            //fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
 
 
             return View(nameof(Index), fordon);
