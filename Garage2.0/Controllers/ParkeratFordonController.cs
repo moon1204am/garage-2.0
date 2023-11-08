@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
+using System.Text;
 
 namespace Garage2._0.Controllers
 {
@@ -11,27 +12,99 @@ namespace Garage2._0.Controllers
         private readonly Garage2_0Context _context;
         private const int timPris = 60;
         private const int minutPris = 1;
+        private const int capacity = 20;
+        private double[] garage = new double[capacity];
+        private double antal;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
             _context = context;
+            InitGarage();
         }
+
+        public double AntalFordonIGaraget => antal;
 
         // GET: ParkeratFordons
         public async Task<IActionResult> Index()
         {
-            var fordon = _context.ParkeratFordon.Select(f => new FordonOversiktViewModel
+            var fordon = await _context.ParkeratFordon.Select(v => new FordonOversiktViewModel
             {
-                Id = f.Id,
-                FordonsTyp = f.FordonsTyp,
-                RegNr = f.RegNr,
-                AnkomstTid = f.AnkomstTid
+                Id = v.Id,
+                FordonsTyp = v.FordonsTyp,
+                RegNr = v.RegNr,
+                AnkomstTid = v.AnkomstTid
 
-            });
-            return View(await fordon.ToListAsync());
+            }).ToListAsync();
+
+            var index = new StartsidaViewModel
+            {
+                ParkeradeFordon = fordon,
+                AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
+            };
+
+            return View(index);
         }
 
+        public IActionResult GaragePlatser()
+        {
+            StringBuilder sb = new StringBuilder();
+            int i = 1;
+            foreach(var item in garage)
+            {
+                
+                if (item == 0d)
+                    sb.AppendLine($"Plats {i}");
+                else if (item == 1/3d) {
+                    sb.AppendLine($"Plats {i}");
+                    sb.AppendLine($"Två lediga motorcykelplatser");
+                }
+                else if(item == 2/3d)
+                {
+                    sb.AppendLine($"Plats {i}");
+                    sb.AppendLine($"En ledig motorcykel plats");
+                }
+                i++;
+            }
+            var model = new GarageOversiktViewModel
+            {
+                LedigaPlatser = sb.ToString(),
+                AntalLedigaPlatser = capacity - antal
+            };
+            return View(model);
+        }
 
+        private void InitGarage()
+        {
+            var fordon = _context.ParkeratFordon.ToList();
+            int index = 0;
+            foreach (var f in fordon)
+            {
+                switch (fordon[index].FordonsTyp)
+                {
+                    case FordonsTyp.Flygplan:
+                    case FordonsTyp.Bat:
+                        garage[f.ParkeringsIndex] = 1d;
+                        garage[f.ParkeringsIndex + 1] = 1d;
+                        garage[f.ParkeringsIndex + 2] = 1d;
+                        antal += 3;
+                        break;
+                    case FordonsTyp.Bil:
+                        garage[f.ParkeringsIndex] = 1d;
+                        antal++;
+                        break;
+                    case FordonsTyp.Motorcykel:
+                        garage[f.ParkeringsIndex] += 1 / 3d;
+                        antal += 1 / 3d;
+                        break;
+                    case FordonsTyp.Buss:
+                        garage[f.ParkeringsIndex] = 1d;
+                        garage[f.ParkeringsIndex + 1] = 1d;
+                        antal += 2;
+                        break;
+                }
+                index++;
+            }
+        }
         
         // GET: ParkeratFordons/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -72,6 +145,8 @@ namespace Garage2._0.Controllers
 
             if (ModelState.IsValid)
             {
+                //LedigaPlatserFinns(fordonViewModel.FordonsTyp);
+
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -265,22 +340,31 @@ namespace Garage2._0.Controllers
           return (_context.ParkeratFordon?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> Filter(string regnr)
+        public async Task<IActionResult> Filter(FordonOversiktViewModel fordonViewModel)
         {
-            var model = string.IsNullOrWhiteSpace(regnr) ?
-                                                _context.ParkeratFordon :
-                                                _context.ParkeratFordon.Where(m => m.RegNr.StartsWith(regnr));
+            var query = string.IsNullOrWhiteSpace(fordonViewModel.RegNr) ?
+                                               _context.ParkeratFordon :
+                                               _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(fordonViewModel.RegNr));
 
-            var result = await model.Select(f => new FordonOversiktViewModel
+
+            var valdaFordon = await query.Select(v => new FordonOversiktViewModel
             {
-                Id = f.Id,
-                FordonsTyp = f.FordonsTyp,
-                RegNr = f.RegNr,
-                AnkomstTid = f.AnkomstTid
-
+                Id = v.Id,
+                FordonsTyp = v.FordonsTyp,
+                RegNr = v.RegNr,
+                AnkomstTid = v.AnkomstTid
             }).ToListAsync();
 
-            return View(nameof(Index), result);
+            var fordon = new StartsidaViewModel            
+            {
+                ParkeradeFordon = valdaFordon,
+                AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
+
+            };
+            //fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
+
+
+            return View(nameof(Index), fordon);
         }
 
         private bool RegNrExisterarValidering(string regNr, bool editerar)
@@ -323,7 +407,7 @@ namespace Garage2._0.Controllers
                 timeCalculator += RaknaUtTid(item.AnkomstTid, DateTime.Now).TotalMinutes;
 
             }
-            result.Intäkter = timeCalculator * 2;
+            result.Intäkter = timeCalculator * minutPris;
             result.GenomsnittligParkeradTid = timeCalculator / divider;
             result.AntalBatar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count();
             result.AntalBilar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
@@ -331,6 +415,19 @@ namespace Garage2._0.Controllers
             result.AntalFlygplan = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count();
             result.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             return View(result);
+        }
+
+        private double RaknaLedigaPlatser()
+        {
+            var parkeradeFordon = _context.ParkeratFordon;
+            double upptagnaPlatser = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bat)).Count() * 3
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Flygplan)).Count() * 3
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Buss)).Count() * 2
+                + parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Bil)).Count();
+            double mcPlatser = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
+            upptagnaPlatser += mcPlatser * .33;
+            return upptagnaPlatser;
+
         }
     }
 }

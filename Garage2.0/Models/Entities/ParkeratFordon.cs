@@ -24,5 +24,7 @@ namespace Garage2._0.Models.Entities
         public int? AntalHjul { get; set; }
         [Display(Name = "Ankomst tid")]
         public DateTime AnkomstTid { get; set; }
+        [Required]
+        public int ParkeringsIndex { get; set; }
     }
 }
