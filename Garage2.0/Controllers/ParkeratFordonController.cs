@@ -306,6 +306,7 @@ namespace Garage2._0.Controllers
 
             DateTime utcheckTid = DateTime.Now;
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
+            string parkeringsTid = $"{tid.Hours} tim {tid.Minutes} min";
             int totalPris = RaknaUtPris(minutPris, tid);
 
             var model = new KvittoViewModel
@@ -313,7 +314,7 @@ namespace Garage2._0.Controllers
                 RegNr = parkeratFordon.RegNr,
                 AnkomstTid = parkeratFordon.AnkomstTid,
                 UtchecksTid = utcheckTid,
-                ParkeringsTid = tid,
+                ParkeringsTid = parkeringsTid,
                 Pris = timPris,
                 TotalPris = totalPris
             };
