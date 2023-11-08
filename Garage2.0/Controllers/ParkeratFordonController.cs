@@ -401,7 +401,7 @@ namespace Garage2._0.Controllers
             var statistikModell = new StatistikViewModel();          
             double totalaAntaletMinuter = 0;
             double antalParkeradeFordon = parkeradeFordon.Count;
-            var hjul = parkeradeFordon.Sum(v => v.AntalHjul);
+            var summaHjul = parkeradeFordon.Sum(v => v.AntalHjul);
             
             foreach (var item in parkeradeFordon)
             {
@@ -410,7 +410,7 @@ namespace Garage2._0.Controllers
             }
 
             AntalFordonPerSort(statistikModell);
-            statistikModell.AntalHjulIGaraget = hjul;
+            statistikModell.AntalHjulIGaraget = summaHjul;
             statistikModell.Intäkter = totalaAntaletMinuter * minutPris;
             statistikModell.GenomsnittligParkeradTid = totalaAntaletMinuter / antalParkeradeFordon;
             return View(statistikModell);
