@@ -1,15 +1,20 @@
-﻿@model IEnumerable<FordonOversiktViewModel>
+﻿﻿
+@model FordonOversiktViewModel
+
 
 @{
-    ViewData["Title"] = "Välkommen";
+    ViewData["Title"] = "Index";
 }
 
 <h1>Åhlens Parkering City</h1>
+<h2>Antal Lediga platser: @Model.AntalLedigaPlatser.ToString()</h2>
+
 
 <p>  
     <a asp-action="Create">Parkera Fordon</a> <a asp-action="Statistik">Statistik</a>
     <a asp-action="GaragePlatser">Se lediga platser</a>
 </p>
+
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="regnr" placeholder="Sök via Regnr" />
@@ -21,7 +26,7 @@
         </div>
     </div>
 </form>
-<p class="alert-info"><strong>@TempData["OkFeedbackMsg"]</strong></p>
+<p class="alert-info"><strong>@TempData["OkParkeraMsg"]</strong></p>
 
-<partial name="ParkListaPartial"/>
 
+<partial name="ParkListaPartial" model="@Model.ParkeradeFordon" />
