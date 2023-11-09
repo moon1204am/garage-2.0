@@ -4,9 +4,10 @@ namespace Garage2._0.Models.ViewModels
 {
     public class StatistikViewModel
     {
-        public double Intäkter {  get; set; }
-        [Display(Name ="Genomsnittlig parkerad tid")]
-        public double GenomsnittligParkeradTid { get; set; }
+        [Display(Name = "Intäkter")]
+        public double Intakter {  get; set; }
+        [Display(Name ="Parkerat tid i snitt")]
+        public int GenomsnittligParkeradTid { get; set; }
         [Display(Name = "Antal hjul i garaget")]
         public int? AntalHjulIGaraget { get; set; }
         [Display(Name = "Antal flygplan")]

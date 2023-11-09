@@ -41,3 +41,7 @@ a:hover {
 .btnAhlens :hover {
     color: darkgrey;
 }
+
+p {
+    margin: 0;
+}

@@ -10,8 +10,8 @@ namespace Garage2._0.Controllers
     public class ParkeratFordonController : Controller
     {
         private readonly Garage2_0Context _context;
-        private const int timPris = 60;
-        private const int minutPris = 1;
+        private const int timPris = 120;
+        private const int minutPris = 2;
         private const int capacity = 100;
         private double[] garage = new double[capacity];
         private double antal;
@@ -287,14 +287,21 @@ namespace Garage2._0.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
+            DateTime utcheckTid = DateTime.Now;
+            TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
+           
+            int totalPris = RaknaUtPris(minutPris, tid);
+
             if (parkeratFordon != null)
             {
                  _context.ParkeratFordon.Remove(parkeratFordon);
                  await _context.SaveChangesAsync();
-                 TempData["OkFeedbackMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr}";
+                 TempData["OkFeedbackMsg"] = $"Hämtar fordon med reg nr {parkeratFordon.RegNr} Kostnad {totalPris} kr";
             }
             return RedirectToAction(nameof(Index));
         }
+
+     
 
         public async Task<IActionResult> Kvitto(int? id)
         {
@@ -309,6 +316,7 @@ namespace Garage2._0.Controllers
             TimeSpan tid = RaknaUtTid(parkeratFordon.AnkomstTid, utcheckTid);
             string parkeringsTid = $"{tid.Hours} tim {tid.Minutes} min";
             int totalPris = RaknaUtPris(minutPris, tid);
+
 
             var model = new KvittoViewModel
             {
@@ -396,8 +404,8 @@ namespace Garage2._0.Controllers
 
             AntalFordonPerSort(statistikModell, parkeradeFordon);
             statistikModell.AntalHjulIGaraget = summaHjul;
-            statistikModell.Intäkter = totalaAntaletMinuter * minutPris;
-            statistikModell.GenomsnittligParkeradTid = totalaAntaletMinuter / antalParkeradeFordon;
+            statistikModell.Intakter = totalaAntaletMinuter * minutPris;
+            statistikModell.GenomsnittligParkeradTid = (int)(totalaAntaletMinuter / antalParkeradeFordon);
             return View(statistikModell);
         }
 
