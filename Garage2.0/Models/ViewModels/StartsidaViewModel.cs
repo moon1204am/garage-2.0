@@ -8,6 +8,5 @@ namespace Garage2._0.Models.ViewModels
         public IEnumerable<FordonOversiktViewModel> ParkeradeFordon { get; set; } = new List<FordonOversiktViewModel>();
         [Display(Name = "Antal lediga platser")]
         public double AntalLedigaPlatser { get; set; }
-
     }
 }
