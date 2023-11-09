@@ -17,7 +17,7 @@ namespace Garage2._0.Models.ViewModels
         public DateTime UtchecksTid { get; set; }
 
         [Display(Name = "Total parkeringstid")]
-        public TimeSpan ParkeringsTid { get; set; }
+        public string ParkeringsTid { get; set; }
         
         [Display(Name = "Pris/timme")]
         public int Pris { get; set; }
