@@ -12,9 +12,13 @@ namespace Garage2._0.Controllers
         private readonly Garage2_0Context _context;
         private const int timPris = 60;
         private const int minutPris = 1;
-        private const int capacity = 20;
+        private const int capacity = 100;
         private double[] garage = new double[capacity];
         private double antal;
+        private const double enMcPlats = 1/3d;
+        private const double tvaMcPlats = 2 / 3d;
+        private const double enParkeringsPlats = 1d;
+        private const double ledigParkeringsPlats = 0d;
 
         public ParkeratFordonController(Garage2_0Context context)
         {
@@ -52,13 +56,13 @@ namespace Garage2._0.Controllers
             foreach(var item in garage)
             {
                 
-                if (item == 0d)
+                if (item == ledigParkeringsPlats)
                     sb.AppendLine($"Plats {i}");
-                else if (item == 1/3d) {
+                else if (item == Math.Round(enMcPlats, 2)) {
                     sb.AppendLine($"Plats {i}");
                     sb.AppendLine($"Två lediga motorcykelplatser");
                 }
-                else if(item == 2/3d)
+                else if(item == Math.Round(tvaMcPlats, 2))
                 {
                     sb.AppendLine($"Plats {i}");
                     sb.AppendLine($"En ledig motorcykel plats");
@@ -83,22 +87,22 @@ namespace Garage2._0.Controllers
                 {
                     case FordonsTyp.Flygplan:
                     case FordonsTyp.Bat:
-                        garage[f.ParkeringsIndex] = 1d;
-                        garage[f.ParkeringsIndex + 1] = 1d;
-                        garage[f.ParkeringsIndex + 2] = 1d;
+                        garage[f.ParkeringsIndex] = enParkeringsPlats;
+                        garage[f.ParkeringsIndex + 1] = enParkeringsPlats;
+                        garage[f.ParkeringsIndex + 2] = enParkeringsPlats;
                         antal += 3;
                         break;
                     case FordonsTyp.Bil:
-                        garage[f.ParkeringsIndex] = 1d;
+                        garage[f.ParkeringsIndex] = enParkeringsPlats;
                         antal++;
                         break;
                     case FordonsTyp.Motorcykel:
-                        garage[f.ParkeringsIndex] += 1 / 3d;
-                        antal += 1 / 3d;
+                        garage[f.ParkeringsIndex] += Math.Round(enMcPlats, 2);
+                        antal += Math.Round(enMcPlats, 2);
                         break;
                     case FordonsTyp.Buss:
-                        garage[f.ParkeringsIndex] = 1d;
-                        garage[f.ParkeringsIndex + 1] = 1d;
+                        garage[f.ParkeringsIndex] = enParkeringsPlats;
+                        garage[f.ParkeringsIndex + 1] = enParkeringsPlats;
                         antal += 2;
                         break;
                 }
@@ -227,16 +231,20 @@ namespace Garage2._0.Controllers
                 try
                 {
                     var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
-                    parkeratFordon.FordonsTyp = parkeratFordonViewModel.FordonsTyp;
-                    parkeratFordon.RegNr = parkeratFordonViewModel.RegNr;
-                    parkeratFordon.Farg = parkeratFordonViewModel.Farg;
-                    parkeratFordon.Marke = parkeratFordonViewModel.Marke;
-                    parkeratFordon.Modell = parkeratFordonViewModel.Modell;
-                    parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
-                    _context.Update(parkeratFordon);
+                    if(parkeratFordon != null)
+                    {
+                        parkeratFordon.FordonsTyp = parkeratFordonViewModel.FordonsTyp;
+                        parkeratFordon.RegNr = parkeratFordonViewModel.RegNr;
+                        parkeratFordon.Farg = parkeratFordonViewModel.Farg;
+                        parkeratFordon.Marke = parkeratFordonViewModel.Marke;
+                        parkeratFordon.Modell = parkeratFordonViewModel.Modell;
+                        parkeratFordon.AntalHjul = parkeratFordonViewModel.AntalHjul;
+                        _context.Update(parkeratFordon);
 
+                        
+                        TempData["OkFeedbackMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
+                    }
                     await _context.SaveChangesAsync();
-                    TempData["OkFeedbackMsg"] = $"Uppdaterat fordon med reg nr {parkeratFordonViewModel.RegNr}";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -278,10 +286,6 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ParkeratFordon == null)
-            {
-                return Problem("Entity set 'Garage2_0Context.ParkeratFordon'  is null.");
-            }
             var parkeratFordon = await _context.ParkeratFordon.FindAsync(id);
             if (parkeratFordon != null)
             {
@@ -323,7 +327,7 @@ namespace Garage2._0.Controllers
 
         }
             
-            private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
+        private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
         {
             return utckeck.Subtract(ankomst);
             
@@ -332,8 +336,6 @@ namespace Garage2._0.Controllers
         private int RaknaUtPris(int pris, TimeSpan parkeringstid)
         {
             return (int)parkeringstid.TotalMinutes * pris ;
-            
-
         }
 
         private bool ParkeratFordonExists(int id)
@@ -362,8 +364,6 @@ namespace Garage2._0.Controllers
                 AntalLedigaPlatser = capacity - RaknaLedigaPlatser()
 
             };
-            //fordon.AntalLedigaPlatser = capacity - RaknaLedigaPlatser();
-
 
             return View(nameof(Index), fordon);
         }
@@ -391,7 +391,7 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Statistik()
         {
-            var parkeradeFordon = _context.ParkeratFordon;
+            var parkeradeFordon = await _context.ParkeratFordon.ToListAsync();
             var result = new StatistikViewModel();
             int? count = 0;
             double timeCalculator = 0;
