@@ -7,7 +7,7 @@ namespace Garage2._0.Models.ViewModels
     {
         public int Id { get; set; }
         [Display(Name = "Fordonstyp")]
-        public FordonsTyp FordonsTyp { get; set; }
+        public FordonsTyp? FordonsTyp { get; set; }
         [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; } = string.Empty;
         [Display(Name = "Ankomsttid")]
