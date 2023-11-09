@@ -21,7 +21,9 @@
                 <label asp-for="RegNr" class="control-label"></label>
                 <input asp-for="RegNr" class="form-control" />
                 <span asp-validation-for="RegNr" class="text-danger"></span>
+
             </div>
+            @Html.Hidden("tidigareRegNr", Model.RegNr)
             <div class="form-group">
                 <label asp-for="Farg" class="control-label"></label>
                 <input asp-for="Farg" class="form-control" />
@@ -52,6 +54,9 @@
 <div class="mt-3">
     <a asp-action="Index">Tillbaka till startsida</a>
 </div>
+
+@Html.Hidden(Model.RegNr, TempData["tidigareReg"])
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
