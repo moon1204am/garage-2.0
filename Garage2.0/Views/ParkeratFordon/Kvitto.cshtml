@@ -36,13 +36,15 @@
             @Html.DisplayNameFor(model => model.Pris)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pris)
+            @* @Html.DisplayFor(model => (model.Pris).ToString("c")) *@
+            <p>@Model.Pris.ToString("c")</p>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TotalPris)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalPris)
+            @* @Html.DisplayFor(model => model.TotalPris) *@
+            @Model.TotalPris.ToString("c")
         </dd>
 
     </dl>
