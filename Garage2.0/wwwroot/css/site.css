@@ -45,3 +45,11 @@ a:hover {
 p {
     margin: 0;
 }
+
+nav .navbar-nav li a {
+    color: #ffff !important;
+}
+
+nav .navbar-nav li a:hover {
+    color: #B0B0B0 !important;
+}
