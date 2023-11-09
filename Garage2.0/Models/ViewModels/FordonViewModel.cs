@@ -11,7 +11,7 @@ namespace Garage2._0.Models.ViewModels
         [Display(Name = "Fordons typ")]
         public FordonsTyp FordonsTyp { get; set; }
         [Required(ErrorMessage = "Ange registreringnummer.")]
-        [Remote(action: "RegNrExisterar", controller: "ParkeratFordon", ErrorMessage = "Registreringsnumret existerar redan, försök igen.")]
+        [Remote(action: "RegNrExisterar", controller: "ParkeratFordon", AdditionalFields = "tidigareRegNr", ErrorMessage = "Registreringsnumret existerar redan, försök igen.")]
         [RegularExpression(@"[A-Za-z]{3}[0-9]{2}[A-Za-z0-9]{1}", ErrorMessage = "Ange ett giltigt registreringsnummer.")]
         [Display(Name = "Registreringsnummer")]
         public string RegNr { get; set; }

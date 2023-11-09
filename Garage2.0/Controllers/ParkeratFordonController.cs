@@ -140,7 +140,7 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FordonViewModel fordonViewModel)
         {
-            if (RegNrExisterarValidering(fordonViewModel.RegNr, false))
+            if (RegNrExisterarValidering(fordonViewModel.RegNr))
             {
                 ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                 return View(fordonViewModel);
@@ -167,10 +167,10 @@ namespace Garage2._0.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        public IActionResult RegNrExisterar(string regNr)
+        public IActionResult RegNrExisterar(string regNr, string tidigareRegNr)
         {
             var fordon = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
-            if (fordon == null || fordon.RegNr == regNr)
+            if (fordon == null || regNr == tidigareRegNr)
             {
                 return Json(true);
             }
@@ -217,7 +217,7 @@ namespace Garage2._0.Controllers
                 return NotFound();
             }
 
-            if (RegNrExisterarValidering(parkeratFordonViewModel.RegNr, true))
+            if (RegNrExisterarValidering(parkeratFordonViewModel.RegNr))
             {
                 ModelState.AddModelError("RegNr", "Registreringsnumret existerar redan.");
                 return View(parkeratFordonViewModel);
@@ -363,25 +363,15 @@ namespace Garage2._0.Controllers
             return View(nameof(Index), fordon);
         }
 
-        private bool RegNrExisterarValidering(string regNr, bool editerar)
+        private bool RegNrExisterarValidering(string regNr)  
         {
+            string tidigare = Request.Form["tidigareRegNr"];
             var fordonReg = _context.ParkeratFordon.FirstOrDefault(v => v.RegNr == regNr);
-            if(editerar)
+            if (fordonReg == null || regNr == tidigare)
             {
-                if (fordonReg == null || fordonReg.RegNr == regNr)
-                {
-                    return false;
-                }
-                return true;
+                return false;
             }
-            else
-            {
-                if (fordonReg == null)
-                {
-                    return false;
-                }
-                return true;
-            }
+            return true;
         }
 
         public async Task<IActionResult> Statistik()
