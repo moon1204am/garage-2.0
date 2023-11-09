@@ -339,11 +339,14 @@ namespace Garage2._0.Controllers
           return (_context.ParkeratFordon?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> Filter(FordonOversiktViewModel fordonViewModel)
+        public async Task<IActionResult> Filter(StartsidaViewModel startsidaViewModel)
         {
-            var utvalda = string.IsNullOrWhiteSpace(fordonViewModel.RegNr) ?
+            var utvalda = string.IsNullOrWhiteSpace(startsidaViewModel.RegNr) ?
                                                _context.ParkeratFordon :
-                                               _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(fordonViewModel.RegNr));
+                                               _context.ParkeratFordon.Where(p => p.RegNr.StartsWith(startsidaViewModel.RegNr));
+
+            utvalda = startsidaViewModel.FordonsTyp is null ? utvalda : utvalda.Where(v => v.FordonsTyp == startsidaViewModel.FordonsTyp);
+
             var valdaFordon = await utvalda.Select(v => new FordonOversiktViewModel
             {
                 Id = v.Id,
@@ -355,7 +358,7 @@ namespace Garage2._0.Controllers
             var fordon = new StartsidaViewModel            
             {
                 ParkeradeFordon = valdaFordon,
-                AntalLedigaPlatser = capacity - antal 
+                AntalLedigaPlatser = capacity - antal,
             };        
             return View(nameof(Index), fordon);
         }

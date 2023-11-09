@@ -13,9 +13,11 @@
 
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="regnr" placeholder="Sök via Regnr" />
+        <input type="text" class="form-control" asp-for="RegNr" placeholder="Sök via Regnr" />
         <div class="input-group-append">
-           
+            <select class="form-control" asp-for="FordonsTyp" asp-items="@Html.GetEnumSelectList<FordonsTyp>()">
+                <option selected="selected" value="">Välj fordon</option>
+            </select>
         </div>
         <div class="input-group-append">
             <button type="submit" class="btn btnAhlens"><i class="fa fa-search">Sök</i></button>
