@@ -9,11 +9,12 @@
     <link rel="stylesheet" href="~/Garage2._0.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header class="header-bg">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                @* <a class="navbar-brand text-light" asp-controller="ParkeratFordon" asp-action="Index">Garage2._0</a> *@
                 <a class="navbar-brand" asp-controller="ParkeratFordon" asp-action="Index">
-                    <img src="images/Logo.png" width="300" height="200" class="d-inline-block align-top mb-2 mt-1"
+                    <img src="/images/Logo.png" width="200" height="60" class="d-inline-block align-top rounded-2 header-bg mb-2 mt-1"
                          alt="Garage 2.0 Logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -23,7 +24,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ParkeratFordon" asp-action="Index">Startsida</a>
+                            <a class="nav-link badge text-wrap text-dark text-uppercase bg-light p-2" asp-controller="ParkeratFordon" asp-action="Index">Startsida</a>
                         </li>
                        
                     </ul>

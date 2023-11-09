@@ -4,7 +4,7 @@
     ViewData["Title"] = "Parkera";
 }
 
-<h1>Parkera</h1>
+<h1 class="display-6">Parkera</h1>
 
 <h4>Fordon</h4>
 <hr />
@@ -44,14 +44,14 @@
                 <span asp-validation-for="AntalHjul" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Parkera" class="btn btn-primary" />
+                <input type="submit" value="Parkera" class="btn btnAhlens mt-3" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Tillbaka</a>
+<div class="mt-3">
+    <a asp-action="Index" >Tillbaka till startsida</a>
 </div>
 
 @section Scripts {

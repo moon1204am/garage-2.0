@@ -5,13 +5,13 @@
     ViewData["Title"] = "Välkommen";
 }
 
-<h1>Åhlens Parkering City</h1>
+<h1 class="display-6">Åhlens Parkering City</h1>
 <h2>Antal Lediga platser: @Model.AntalLedigaPlatser.ToString()</h2>
 
 
 <p>  
-    <a asp-action="Create">Parkera Fordon</a> <a asp-action="Statistik">Statistik</a>
-    <a asp-action="GaragePlatser">Se lediga platser</a>
+    <a asp-action="Create" class=" badge text-wrap text-decoration-none btnAhlens fs-6 p-3 ">Parkera Fordon</a> <a asp-action="Statistik" class="badge text-wrap text-decoration-none btnAhlens fs-6 p-3">Statistik</a>
+    <a asp-action="GaragePlatser" class=" badge text-wrap text-decoration-none btnAhlens fs-6 p-3 ">Se lediga platser</a>
 </p>
 
 <form asp-action="Filter" asp-controller="ParkeratFordon" method="get">
@@ -21,7 +21,7 @@
            
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-search">Sök</i></button>
+            <button type="submit" class="btn btnAhlens"><i class="fa fa-search">Sök</i></button>
         </div>
     </div>
 </form>
