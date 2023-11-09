@@ -43,7 +43,7 @@ namespace Garage2._0.Controllers
             var index = new StartsidaViewModel
             {
                 ParkeradeFordon = fordon,
-                AntalLedigaPlatser = capacity - antal // RaknaLedigaPlatser()
+                AntalLedigaPlatser = capacity - antal
             };
 
             return View(index);
@@ -55,7 +55,6 @@ namespace Garage2._0.Controllers
             int i = 1;
             foreach(var item in garage)
             {
-                
                 if (item == ledigParkeringsPlats)
                     sb.AppendLine($"Plats {i}");
                 else if (item == Math.Round(enMcPlats, 2)) {
@@ -149,8 +148,6 @@ namespace Garage2._0.Controllers
 
             if (ModelState.IsValid)
             {
-                //LedigaPlatserFinns(fordonViewModel.FordonsTyp);
-
                 var fordon = new ParkeratFordon
                 {
                     FordonsTyp = fordonViewModel.FordonsTyp,
@@ -301,8 +298,6 @@ namespace Garage2._0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-     
-
         public async Task<IActionResult> Kvitto(int? id)
         {
             if (id == null) { return NotFound(); }
@@ -317,7 +312,6 @@ namespace Garage2._0.Controllers
             string parkeringsTid = $"{tid.Hours} tim {tid.Minutes} min";
             int totalPris = RaknaUtPris(minutPris, tid);
 
-
             var model = new KvittoViewModel
             {
                 RegNr = parkeratFordon.RegNr,
@@ -327,9 +321,7 @@ namespace Garage2._0.Controllers
                 Pris = timPris,
                 TotalPris = totalPris
             };
-
             return View(model);
-
         }
             
         private TimeSpan RaknaUtTid (DateTime ankomst, DateTime utckeck)
@@ -419,7 +411,5 @@ namespace Garage2._0.Controllers
             statistikModell.AntalMotorcyklar = parkeradeFordon.Where(p => p.FordonsTyp.Equals(FordonsTyp.Motorcykel)).Count();
             return (statistikModell);
         }
-
-
     }
 }

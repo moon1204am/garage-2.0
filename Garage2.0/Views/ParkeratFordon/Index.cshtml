@@ -1,13 +1,11 @@
 ﻿@model StartsidaViewModel
 
-
 @{
     ViewData["Title"] = "Välkommen";
 }
 
 <h1 class="display-6">Åhlens Parkering City</h1>
 <h2>Antal Lediga platser: @Model.AntalLedigaPlatser.ToString()</h2>
-
 
 <p>  
     <a asp-action="Create" class=" badge text-wrap text-decoration-none btnAhlens fs-6 p-3 ">Parkera Fordon</a> <a asp-action="Statistik" class="badge text-wrap text-decoration-none btnAhlens fs-6 p-3">Statistik</a>
@@ -26,6 +24,4 @@
     </div>
 </form>
 <p class="alert-info"><strong>@TempData["OkFeedbackMsg"]</strong></p>
-
-
 <partial name="ParkListaPartial" model="@Model.ParkeradeFordon" />

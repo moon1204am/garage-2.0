@@ -20,7 +20,5 @@ namespace Garage2._0.Models.ViewModels
         public int AntalBilar {  get; set; }
         [Display(Name = "Antal båtar")]
         public int AntalBatar {  get; set; }
-
-     
     }
 }

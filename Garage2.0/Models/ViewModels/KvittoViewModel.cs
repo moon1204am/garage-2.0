@@ -24,7 +24,5 @@ namespace Garage2._0.Models.ViewModels
 
         [Display(Name = "Total pris")]
         public  int TotalPris { get; set; }
-
-
     }
 }
