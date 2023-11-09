@@ -4,7 +4,7 @@
     ViewData["Title"] = "Kvitto";
 }
 
-<h1>Kvitto</h1>
+<h1 class="display-6">Kvitto</h1>
 
 <div>
     <dl class="row">
@@ -36,22 +36,30 @@
             @Html.DisplayNameFor(model => model.Pris)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pris)
+            @* @Html.DisplayFor(model => (model.Pris).ToString("c")) *@
+            <p>@Model.Pris.ToString("c")</p>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TotalPris)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalPris)
+            @* @Html.DisplayFor(model => model.TotalPris) *@
+            @Model.TotalPris.ToString("c")
         </dd>
 
     </dl>
 
-    <form asp-action="Kvitto">
-        @* <input type="hidden" asp-for="Id" /> *@
-        <a  class="btn btn-success" onclick="window.print()">Skriv ut kvittot</a> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    <div class="row">
+        <div class="d-inline-block p-2">
+            <form asp-action="Kvitto">
+                <a  class="btn btn-success" onclick="window.print()">Skriv ut kvittot</a> 
+            </form>
+        </div>
+        <div class="d-inline-block p-2">
+               <a asp-action="Index">Tillbaka till startsida</a>
+        </div>
+
+    </div>
     
     
 

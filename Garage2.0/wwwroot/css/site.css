@@ -20,3 +20,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+a {
+    color: #df1b12;
+}
+
+a:hover {
+    color: darkgrey;
+}
+
+.header-bg {
+    background-color: #df1b12;
+}
+
+.btnAhlens {
+    background-color: #df1b12;
+    color: white;
+}
+
+.btnAhlens :hover {
+    color: darkgrey;
+}
+
+p {
+    margin: 0;
+}

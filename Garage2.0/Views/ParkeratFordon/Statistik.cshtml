@@ -5,7 +5,7 @@
 }
 
 
-<h1>Statistik</h1>
+<h1 class="display-6">Statistik</h1>
 
 <div>
    
@@ -18,16 +18,16 @@
             @Html.DisplayFor(model => model.AntalHjulIGaraget)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Intäkter)
+            @Html.DisplayNameFor(model => model.Intakter)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Intäkter)
+            <p>@Model.Intakter.ToString("c")</p>
         </dd>
          <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.GenomsnittligParkeradTid)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GenomsnittligParkeradTid)
+            <p>@Model.GenomsnittligParkeradTid.ToString() Minuter</p>
         </dd>
         <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.AntalBatar)
