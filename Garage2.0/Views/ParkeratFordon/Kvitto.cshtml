@@ -47,10 +47,17 @@
 
     </dl>
 
-    <form asp-action="Kvitto">
-        <a  class="btn btn-success" onclick="window.print()">Skriv ut kvittot</a> |
-        <a asp-action="Index">Tillbaka till startsida</a>
-    </form>
+    <div class="row">
+        <div class="d-inline-block p-2">
+            <form asp-action="Kvitto">
+                <a  class="btn btn-success" onclick="window.print()">Skriv ut kvittot</a> 
+            </form>
+        </div>
+        <div class="d-inline-block p-2">
+               <a asp-action="Index">Tillbaka till startsida</a>
+        </div>
+
+    </div>
     
     
 
